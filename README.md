@@ -1,51 +1,20 @@
-fundamentals-ts
-===============
+C++ HTML document framework
+===========================
 
-The draft C++ Library Fundamentals Technical Specification
+This is a [Polymer](http://www.polymer-project.org/)-based HTML framework for
+writing ISO C++ documents and papers.  To use it for your document, you should
 
-Visit [the Polymer-based rendered
-version](http://cplusplus.github.io/fundamentals-ts/main.html)
-or the [standalone
-version](http://cplusplus.github.io/fundamentals-ts/fundamentals-ts.html).
+1. [Install Bower.](http://bower.io/#installing-bower)
+2. Install this package by running `bower install cplusplus/html-doc-framework` in the root directory of your document.
+3. Import this package into your main HTML file by adding two lines inside the `<head>` element:
 
-This TS is written using the [Polymer
-framework](http://www.polymer-project.org/) to build custom HTML
-elements. See the `elements` directory for these elements'
-definitions.
+```HTML
+<script src="bower_components/platform/platform.js"></script>
+<link rel="import" href="bower_components/cxx-html-doc-framework/framework.html"/>
+```
 
-
-Style guide
------------
-
-This guide is intended to produce results compatible with the main C++
-standard, which is written in LaTeX.
-
-Write semantic markup according to http://developers.whatwg.org/.
-
-Generally use `<code>` rather than `<samp>`, `<kbd>`, `<tt>` or other
-monospacing elements. `<samp>` could be useful for sample compiler
-error messages.  Don't use `<kbd>` for code a user might enter: that's
-just `<code>`.
-
-Use `<em>` for emphasis and `<i>` for text in another "voice", like
-comments and technical terms.  `<dfn>` is good for the defining
-instance of a term, but not for subsequent uses. I may add a
-`<cxx-term>` element to call out uses of technical terms specifically,
-which will enable automatic cross-linking and indexing.
-
-Use `<var>` for variables. There's tension between using it for all
-variables, including function parameters, and only calling out
-meta-variables used in documentation.  I'm leaning toward only
-meta-variables, since marking up parameters requires a huge number of
-tags, which make it harder to read the source, and there's not much
-reason to italicize normal variables.  Most meta-variables will end up
-marked up as `<code><var>meta-variable</var></code>`.
-
-Very little text is bold, either with `<strong>` or `<b>`.
-
-Any repeated markup structure should be abstracted out into a custom
-element in the `elements/` directory.
-
+Before I can accept a contribution to this project, you'll need to sign the
+Contributor License Agreement at https://developers.google.com/open-source/cla/individual.
 
 Custom C++-specific elements
 ----------------------------
@@ -144,3 +113,37 @@ title of referenced section`".
 ### `<table is="cxx-table">`
 
 Adds a "Table # —" prefix to the table `<caption>`.
+
+Style guide for documents using this framework
+----------------------------------------------
+
+This guide is intended to produce results compatible with the main C++
+standard, which is written in LaTeX.
+
+Write semantic markup according to http://developers.whatwg.org/.
+
+Generally use `<code>` rather than `<samp>`, `<kbd>`, `<tt>` or other
+monospacing elements. `<samp>` could be useful for sample compiler
+error messages.  Don't use `<kbd>` for code a user might enter: that's
+just `<code>`.
+
+Use `<em>` for emphasis and `<i>` for text in another "voice", like
+comments and technical terms.  `<dfn>` is good for the defining
+instance of a term, but not for subsequent uses. I may add a
+`<cxx-term>` element to call out uses of technical terms specifically,
+which will enable automatic cross-linking and indexing.
+
+Use `<var>` for variables. There's tension between using it for all
+variables, including function parameters, and only calling out
+meta-variables used in documentation.  I'm leaning toward only
+meta-variables, since marking up parameters requires a huge number of
+tags, which make it harder to read the source, and there's not much
+reason to italicize normal variables.  Most meta-variables will end up
+marked up as `<code><var>meta-variable</var></code>`.
+
+Very little text is bold, either with `<strong>` or `<b>`.
+
+In CSS, avoid the CSS `content` property because it doesn't copy/paste well in many browsers.
+Use a custom element with text in the `<template>` instead.
+Shadow DOM (what's generated from the template) also doesn't copy/paste well, but that's improving,
+and the polyfill can produce non-Shadow DOM, which `<cxx-publish>` can fix into plain HTML.
