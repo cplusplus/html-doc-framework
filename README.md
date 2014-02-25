@@ -19,6 +19,13 @@ Contributor License Agreement at https://developers.google.com/open-source/cla/i
 Custom C++-specific elements
 ----------------------------
 
+### `<cxx-include href="other.html">`
+
+This one isn't really C++-specific: it allows partitioning a main document
+into multiple pieces. `other.html`'s body will be copied in place of the
+`<cxx-include>` element.
+
+
 ### `<cxx-clause>` and `<cxx-section>`
 
 These automatically number clauses and sections, fill in
