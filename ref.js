@@ -43,9 +43,10 @@ limitations under the License.
                 this.async(function() {
                     // Async makes sure the to_elem is upgraded.
                     if (!(this.to_elem instanceof CxxSectionElement ||
-                          this.to_elem instanceof CxxTableElement)) {
+                          this.to_elem instanceof CxxTableElement ||
+                          this.to_elem instanceof CxxFigureElement)) {
                         console.error("Reference from", this,
-                                      "refers to non-section, non-table element",
+                                      "refers to non-section, non-table, non-figure element",
                                       this.to_elem);
                     }
                 });

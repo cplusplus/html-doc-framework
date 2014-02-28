@@ -31,7 +31,8 @@ limitations under the License.
                  ><template if="{{in_elem.index}}">{{in_elem.name}} &#xa7;{{in_elem.index[to]}}</template
                  ><template if="{{!in}}"><a href="#{{to}}"
                    ><template if="{{to_elem.sec_num}}">{{to_elem.sec_num}}</template
-                   ><template if="{{to_elem.table_num}}">Table {{to_elem.table_num}}</template></a></template
+                   ><template if="{{to_elem.table_num}}">Table {{to_elem.table_num}}</template
+                   ><template if="{{to_elem.figure_num}}">Figure {{to_elem.figure_num}}</template></a></template
       ></template
       ><template if="{{insynopsis}}">// <i><template bind="" ref="target_num"></template>, {{to_elem.title_element.textContent}}</i></template
       ><template if="{{!insynopsis}}"><template bind="" ref="target_num"></template></template
