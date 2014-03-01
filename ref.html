@@ -28,8 +28,8 @@ limitations under the License.
 <polymer-element name="cxx-ref" attributes="to insynopsis in">
   <template
       ><template id="target_num"
-                 ><template if="{{in_elem.index}}">{{in_elem.name}} &#xa7;{{in_elem.index[to]}}</template
-                 ><template if="{{!in}}"><a href="#{{to}}"
+                 ><template if="{{in_elem.index}}">{{in_elem.name}} <span title="{{to}}">&#xa7;{{in_elem.index[to]}}</span></template
+                 ><template if="{{!in}}"><a title="{{to}}" href="#{{to}}"
                    ><template if="{{to_elem.sec_num}}">{{to_elem.sec_num}}</template
                    ><template if="{{to_elem.table_num}}">Table {{to_elem.table_num}}</template
                    ><template if="{{to_elem.figure_num}}">Figure {{to_elem.figure_num}}</template></a></template
