@@ -42,7 +42,10 @@ cxx-titlepage { page: title; page-break-after: always; }
 }
 
 /* Needed to make the <cxx-titlepage>'s vertical spacing work. */
-html, body {height: 100%}
+html, body {
+    height: 100%;
+    text-align: justify;
+}
 
 cxx-docnum { string-set: docnum content(); }
 
