@@ -8,85 +8,61 @@
   version of the draft standard (or as well as I can interpret
   the spacing in LaTeX - a .9\textwidth minipage with tabs every
   .6 inches).
-
-  FIXME: We should pobably define a CXX class for these blocks.
 -->
-<polymer-element name="bnf-grammar">
+<polymer-element name="bnf-grammar" noscript>
   <template>
-    <div style="font-style:italic;margin-left:.35in;">
-      <content></content>
-    </div>
+    <style>
+      :host { display: block; font-style:italic; margin-left:.35in; };
+    </style>
+    <content></content>
   </template>
-  <script>
-    Polymer('bnf-grammar', {
-      applyAuthorStyles: true,
-    });
-  </script>
 </polymer-element>
 
 <!-- BNF rule
   Defines a BNF production.
 -->
-<polymer-element name="bnf-rule">
+<polymer-element name="bnf-rule" noscript>
   <template>
-    <span style="margin-left:.6in"><content></content>:<br/></span>
+    <style>
+      :host { display: block; margin-left: .6in; }
+    </style>
+    <content></content>:
   </template>
-  <script>
-    Polymer('bnf-rule', {
-      applyAuthorStyles: true,
-    });
-  </script>
 </polymer-element>
 
 
-<!-- BNF rule alternative. 
-  Indents the alternative beneath the rule name and applies 
+<!-- BNF rule alternative.
+  Indents the alternative beneath the rule name and applies
   a line break.
 -->
-<polymer-element name="bnf-alt">
+<polymer-element name="bnf-alt" noscript>
   <template>
-    <span style="margin-left:1.2in"><content></content></span><br/>
+    <style>
+      :host { display: block; margin-left:1.2in; }
+    </style>
+    <content></content>
   </template>
-  <script>
-    Polymer('bnf-alt', {
-      applyAuthorStyles: true,
-    });
-  </script>
 </polymer-element>
 
 <!-- BNF terminal
   A terminal element in a BNF specification.
 -->
-<polymer-element name="bnf-terminal">
-  <template
-    ><code style="font-style:normal"><content></content></code></template>
-  <script>
-    Polymer('bnf-terminal', {
-      applyAuthorStyles: true,
-    });
-  </script>
+<polymer-element name="bnf-terminal" noscript>
+  <template><style>
+    :host { font-style: normal; }
+  </style><code><content></content></code></template>
 </polymer-element>
 
 <!-- BNF optional element -->
-<polymer-element name="bnf-opt">
+<polymer-element name="bnf-opt" noscript>
   <template><sub>opt</sub></template>
-  <script>
-    Polymer('bnf-opt', {
-      applyAuthorStyles: true,
-    });
-  </script>
 </polymer-element>
 
 <!-- Grammar terms
   A grammar term refers to a BNF production in the grammar.
 
-  TODO: Link grammar terms to their definitions? 
+  TODO: Link grammar terms to their definitions?
  -->
-<polymer-element name="cxx-grammarterm">
+<polymer-element name="cxx-grammarterm" noscript>
   <template><i><content></content></i></template>
-  <script>
-    Polymer('cxx-grammarterm', {
-      applyAuthorStyles: true,
-    });
-  </script>
 </polymer-element>
