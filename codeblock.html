@@ -1,25 +1,30 @@
 
 <!-- Code Block
-  Code block elements are used to wrap program fragments in C++. The
-  element is partially formatted for improved rendering by removing
-  leading and trailing whitespace that is generally annoying in
-  <pre> blocks.
+  Code block elements are used to wrap program fragments in C++.
 
-  Also, without this, <pre> block was being rendered outside of examples.
-  That's not desirable.
+  For improved source clarity, this element removes leading and trailing
+  whitespace from its contents.
+
+  This element also prevents the HTML parser from ending a surrounding <p> tag
+  when it sees the opening <pre>.
 
   TODO: This could call into a syntax highlighter that styles
   comments correctly.
 -->
 <polymer-element name="cxx-codeblock">
   <template>
+    <style>
+      :host { display: block; }
+    </style>
     <pre><code><content></content></code></pre>
   </template>
   <script>
     Polymer('cxx-codeblock', {
-      applyAuthorStyles: true,
-      ready: function() {
-        this.innerHTML = this.innerHTML.trim();
+      attached: function() {
+        if (this.firstChild.nodeType == Node.TEXT_NODE)
+          this.firstChild.nodeValue = this.firstChild.nodeValue.replace(/^\s+/, '');
+        if (this.lastChild.nodeType == Node.TEXT_NODE)
+          this.lastChild.nodeValue = this.lastChild.nodeValue.replace(/\s+$/, '');
       }
     });
   </script>
