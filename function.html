@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<polymer-element name="cxx-function" constructor="CxxFunctionElement">
+<polymer-element name="cxx-function" constructor="CxxFunctionElement" noscript>
   <template>
     <style>
       :host { display: block; }
@@ -27,11 +27,6 @@ limitations under the License.
       <content></content>
     </dl>
   </template>
-  <script>
-    Polymer('cxx-function', {
-      applyAuthorStyles: true,
-    });
-  </script>
 </polymer-element>
 <polymer-element name="cxx-signature" noscript>
   <template><style>
@@ -39,7 +34,7 @@ limitations under the License.
       :host(.formatted) {padding-left: 0m; text-indent:0;}
     </style><content></content></template>
 </polymer-element>
-<polymer-element name="cxx-attribute" constructor="CxxFunctionAttributeElement">
+<polymer-element name="cxx-attribute" constructor="CxxFunctionAttributeElement" noscript>
   <template>
     <style>
       :host {display:block; margin-top: .5em; margin-bottom: .5em;}
@@ -50,11 +45,6 @@ limitations under the License.
     </style>
     <dt>{{heading}}:</dt><dd><content></content></dd>
   </template>
-  <script>
-    Polymer('cxx-attribute', {
-      applyAuthorStyles: true,
-    });
-  </script>
 </polymer-element>
 <polymer-element name="cxx-requires" extends="cxx-attribute">
   <script>

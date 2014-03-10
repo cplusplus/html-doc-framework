@@ -36,9 +36,9 @@ cxx-titlepage { page: title; page-break-after: always; }
 
 @media print {
     html { font-size: 10pt; }
-    pre,code { font-size: 8pt; }
+    * /shadow-deep/ pre, * /shadow-deep/ code { font-size: 8pt; }
     /* Note that only Prince generates clickable links. */
-    a[href] { text-decoration:none; }
+    * /shadow-deep/ a[href] { text-decoration:none; }
 }
 
 /* Needed to make the <cxx-titlepage>'s vertical spacing work. */
