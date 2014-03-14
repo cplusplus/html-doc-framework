@@ -1,0 +1,27 @@
+
+<!-- Code Block
+  Code block elements are used to wrap program fragments in C++. The
+  element is partially formatted for improved rendering by removing
+  leading and trailing whitespace that is generally annoying in
+  <pre> blocks.
+
+  Also, without this, <pre> block was being rendered outside of examples.
+  That's not desirable.
+
+  TODO: This could call into a syntax highlighter that styles
+  comments correctly.
+-->
+<polymer-element name="cxx-codeblock">
+  <template>
+    <pre><code><content></content></code></pre>
+  </template>
+  <script>
+    Polymer('cxx-codeblock', {
+      applyAuthorStyles: true,
+      ready: function() {
+        this.innerHTML = this.innerHTML.trim();
+      }
+    });
+  </script>
+</polymer-element>
+
