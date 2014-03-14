@@ -77,6 +77,19 @@ ins {text-decoration: underline; color: #005100;}
 pre { margin-left: 1em; }
 pre > code { display: inline-block; }
 
+
+/* Use an em-dash for the list bullet. */
+ul {
+    list-style: none;
+    /* Relative positioning on the 'ul' lets the absolutely-positioned
+       marker align relative to it.*/
+    position: relative;
+}
+ul li:before {
+    content: "\2014";
+    position: absolute; left: 10px;
+}
+
 /* This is here rather than inside elements/toc.html because browsers
    don't understand leader() or target-counter(), so they drop them
    inside the CSSOM. */
