@@ -23,6 +23,7 @@ limitations under the License.
       href="../core-ajax/core-ajax.html">
 <polymer-element name="cxx-foreign-index" attributes="src name">
   <template>
+    <style> :host {display: none} </style>
     <core-ajax auto=""
                   url="{{src}}"
                   handleAs="json"
