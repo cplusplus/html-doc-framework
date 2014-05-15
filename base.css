@@ -41,8 +41,11 @@ cxx-titlepage { page: title; page-break-after: always; }
     * /deep/ a[href] { text-decoration:none; }
 }
 
-/* Needed to make the <cxx-titlepage>'s vertical spacing work. */
-html, body {height: 100%}
+@media screen {
+    /* Needed to make the <cxx-titlepage>'s vertical spacing work.
+       For print see the <cxx-titlepage> definition. */
+    html, body {height: 100%}
+}
 
 cxx-docnum { string-set: docnum content(); }
 
