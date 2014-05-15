@@ -82,7 +82,6 @@ pre {
     margin-top: .5em;
     margin-bottom: .5em;
 }
-pre > code { display: inline-block; }
 
 /* Use an em-dash for the list bullet.
    'print' is a proxy for supporting ::marker. */
