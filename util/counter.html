@@ -1,0 +1,65 @@
+<!-- Copyright 2014 Google Inc. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!--
+Put this element in another element's <template> as:
+  <cxx-counter name="element-name" value="{{counterValue}}">
+  </cxx-counter>
+
+Then this.counterValue will be the number of <cxx-counter> elements with the
+same [name] value in document order up to and including this element. This
+count ignores shadow dom boundaries.
+-->
+<polymer-element name="cxx-counter" attributes="name value">
+  <template><style>:host {display: none}</style></template>
+  <script>
+    (function() {
+      'use strict';
+
+      // Maps names to the array of <cxx-counter> elements with that name.
+      var names = {};
+
+      // We observe the 'names' map instead of directly calling a function
+      // when it changes, in order to coalesce multiple changes that happen
+      // close together.
+      var observer = new ObjectObserver(names);
+      observer.open(function(added, removed, changed, getOldValueFn) {
+        function updateValues(elemArray) {
+          for (var i = 0; i < elemArray.length; i++) {
+            elemArray[i].value = i + 1;
+          }
+        };
+        Object.keys(added).forEach(function(name) { updateValues(added[name]); });
+        Object.keys(changed).forEach(function(name) { updateValues(changed[name]); });
+      });
+
+      function updateNamesArray() {
+        var query = '* /deep/ cxx-counter[name="' + this.name + '"]';
+        // Work around https://github.com/Polymer/ShadowDOM/issues/436.
+        if (Platform.ShadowCSS)
+          query = Platform.ShadowCSS.shimCssText(query);
+        names[this.name] = document.querySelectorAll(query);
+        // Make sure the observer runs even on platforms without Object.observe.
+        setTimeout(Platform.performMicrotaskCheckpoint, 0);
+      }
+
+      Polymer('cxx-counter', {
+        value: 0,
+        domReady: updateNamesArray,
+        detached: updateNamesArray,
+      });
+    })();
+  </script>
+</polymer-element>

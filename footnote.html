@@ -13,7 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<polymer-element name="cxx-footnote">
+<link rel="import" href="util/counter.html" />
+<polymer-element name="cxx-footnote" noscript>
   <template><style>
     :host { font-family: serif; white-space: normal;
             text-indent: initial; }
@@ -27,16 +28,5 @@ limitations under the License.
     }
   </style><!--
     Be sure not to introduce whitespace here, as it appears around the footnote.
-  --><sup id="footnote-call-{{foot_num}}"><a href="#footnote-body-{{foot_num}}">{{foot_num}}</a></sup><aside class="footnote" id="footnote-body-{{foot_num}}"><span class="marker"><a href="#footnote-call-{{foot_num}}">{{foot_num}}</a>) </span><content/></aside></template>
-
-  <script>
-(function() {
-    var footnote_count = 0;
-    Polymer('cxx-footnote', {
-        'created': function() {
-            this.foot_num = ++footnote_count;
-        },
-    })
-})();
-  </script>
+  --><cxx-counter name="cxx-footnote" value="{{foot_num}}"></cxx-counter><sup id="footnote-call-{{foot_num}}"><a href="#footnote-body-{{foot_num}}">{{foot_num}}</a></sup><aside class="footnote" id="footnote-body-{{foot_num}}"><span class="marker"><a href="#footnote-call-{{foot_num}}">{{foot_num}}</a>) </span><content/></aside></template>
 </polymer-element>
