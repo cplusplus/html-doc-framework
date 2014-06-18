@@ -26,6 +26,10 @@ limitations under the License.
       Polymer('cxx-clause', {
         // Convenience function at the clause level, which gets called from <cxx-toc>.
         set_clause_num: function(clause_num) {
+          // If the author explicitly specified the clause number, don't
+          // use a different number.
+          if (this.number)
+            clause_num = this.number
           this.update_sec_nums(clause_num);
         },
 
