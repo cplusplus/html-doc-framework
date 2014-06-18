@@ -71,6 +71,10 @@ limitations under the License.
         },
 
         numberParagraph: function(number, element) {
+            // If the paragraph is explicitly numbered, use that number.
+            if (element.hasAttribute("number"))
+                number = element.getAttribute("number")
+
             var id = this.id + '.' + number;
             if (element.id) {
                 console.warn('Paragraph already has id:', element);
