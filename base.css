@@ -101,6 +101,9 @@ pre {
     ul li::marker {
         content: "\2014";
     }
+    [is=cxx-table].list ul li::marker {
+        content: none;
+    }
 }
 
 /* This is here rather than inside elements/toc.html because browsers

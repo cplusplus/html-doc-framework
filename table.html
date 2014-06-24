@@ -17,8 +17,11 @@ limitations under the License.
     Uses the HTML <table> content model, but automatically adds a number to
     the <caption>.  Use this as <table is="cxx-table">, unlike the other custom
     elements.
+
+    With class="list", the table represents a list, which will be organized
+    into the number of columns set by the [columns] attribute.
 -->
-<polymer-element name="cxx-table" extends="table" constructor="CxxTableElement">
+<polymer-element name="cxx-table" extends="table" constructor="CxxTableElement" attributes="columns">
   <template>
     <style>
       :host { margin-left: auto; margin-right: auto;
@@ -46,7 +49,12 @@ limitations under the License.
       :host(.center) ::content td { text-align: center; }
 
       polyfill-next-selector { content: ':host(.list) td' }
-      :host(.list) ::content td { border: none; }
+      :host(.list) ::content td { border: none; vertical-align: top; }
+
+      polyfill-next-selector { content: ':host(.list) ul' }
+      :host(.list) ::content ul { padding-left: 0; margin: 0;}
+      polyfill-next-selector { content: ':host(.list) ul li::before' }
+      :host(.list) ::content ul li::before { content: '';}
     </style>
 
     <caption>Table {{table_num}} — <wbr><content select="caption"></content></caption>
@@ -60,7 +68,39 @@ limitations under the License.
         });
       }
       Polymer('cxx-table', {
-        domReady: renumberTables,
+        arrangeColumns: function() {
+          // Balance list-tables so we don't have to do it manually.  I tried
+          // using CSS columns, but the appearance isn't as nice.
+          if (this.classList.contains('list')) {
+            // Set ARIA role so screenreaders go straight to the list.
+            this.setAttribute('role', 'presentation');
+
+            // Avoid messing with tables that are manually formatted.
+            if (this.rows.length == 1 &&
+                this.rows[0].cells.length == 1 &&
+                this.rows[0].cells[0].firstElementChild instanceof HTMLUListElement) {
+              var tr = this.rows[0];
+              var elems = tr.querySelectorAll('li').array();
+              tr.cells[0].remove();
+              var rows = Math.ceil(elems.length / this.columns);
+              for (var column = 0; column < this.columns; column++) {
+                var td = document.createElement('td');
+                tr.appendChild(td);
+                var ul = document.createElement('ul');
+                td.appendChild(ul);
+                for (var row = 0; row < rows; row++) {
+                  var index = column*rows + row;
+                  if (index < elems.length)
+                    ul.appendChild(elems[index]);
+                }
+              }
+            }
+          }
+        },
+        domReady: function() {
+          renumberTables.apply(this);
+          this.arrangeColumns();
+        },
         detached: renumberTables,
       });
     })();
