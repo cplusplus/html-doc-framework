@@ -36,10 +36,15 @@ limitations under the License.
         },
 
         clausesChanged: function() {
-            this.sections = this.clauses.array().map(function(clause, index) {
-                clause.set_clause_num(index + 1);
-                return this.collectSections(clause);
-            }, this);
+            var n = 1
+            while (n < this.clauses.length) {
+                n = this.clause[n].set_clause_num(n)
+            }
+
+            // this.sections = this.clauses.array().map(function(clause, index) {
+            //     clause.set_clause_num(index + 1);
+            //     return this.collectSections(clause);
+            // }, this);
         },
 
         domReady: function() {
