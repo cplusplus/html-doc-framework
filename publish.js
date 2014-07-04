@@ -140,19 +140,28 @@ limitations under the License.
     }
 
     Polymer('cxx-publish-button', {
+        publishing: false,
+        flattenedBlob: null,
         publish: function() {
+            if (this.publishing) {
+                return;
+            }
+            this.publishing = true;
             var copyPromise = cloneStaticAndInline(document);
             var source = '';
             if (this.source) {
-                var source = '<!-- Sources at ' + this.source + ' -->\n';
+                source = '<!-- Sources at ' + this.source + ' -->\n';
             }
             copyPromise.then(function(copy) {
                 var published = new Blob(['<!DOCTYPE html>\n',
                                           source,
                                           copy.documentElement.outerHTML],
                                          {type: 'text/html'});
-                window.open(URL.createObjectURL(published), '_blank');
-            });
-        }
+                this.flattenedBlob = URL.createObjectURL(published);
+            }.bind(this)).catch(function(e) {
+                console.error(e);
+                this.publishing = false;
+            }.bind(this));
+        },
     });
 })();
