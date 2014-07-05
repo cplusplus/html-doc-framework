@@ -31,7 +31,11 @@ limitations under the License.
       <button on-click="{{publish}}" disabled?="{{ publishing }}">Publish</button>
     </template>
     <template if="{{ flattenedBlob }}">
-      <a href="{{ flattenedBlob }}">Flattened document</a>
+      <p>Published:</p>
+      <ul>
+        <li><a href="{{ flattenedBlob }}">Flattened document</a></li>
+        <li><a href="{{ sectionIndex }}">Section index, in json suitable for &lt;cxx-foreign-index></a></li>
+      </ul>
     </template>
   </template>
   <script src="publish.js"></script>
