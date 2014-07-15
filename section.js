@@ -30,7 +30,12 @@ limitations under the License.
             // Assume there aren't any elements between cxx-section levels.
             for (var child = this.firstChild; child; child = child.nextSibling) {
                 if (child instanceof CxxSectionElement) {
-                    child.update_sec_nums(this.sec_num + '.' + (child_index++));
+                    if (child.number) {
+                        child_index = Number(child.number);
+                        console.log(child.number)
+                    }
+                    child.update_sec_nums(this.sec_num + '.' + child_index);
+                    child_index++;
                 }
             }
         },

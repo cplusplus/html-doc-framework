@@ -36,9 +36,11 @@ limitations under the License.
         },
 
         clausesChanged: function() {
-            var n = 1
-            while (n < this.clauses.length) {
-                n = this.clause[n].set_clause_num(n)
+            var clause_num = 1;
+            for (var i = 0; i < this.clauses.length; ++i) {
+                var clause = this.clauses[i];
+                clause_num = clause.set_clause_num(clause_num);
+                this.sections.push(this.collectSections(clause));
             }
 
             // this.sections = this.clauses.array().map(function(clause, index) {
