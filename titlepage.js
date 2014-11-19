@@ -70,8 +70,7 @@ limitations under the License.
                 stage_suffix = ", Working Draft";
             } else if (this.stage == 'pdts') {
                 stage_suffix = ", PDTS"
-            }
-            } else if (this.stage == 'pdts') {
+            } else if (this.stage == 'dts') {
                 stage_suffix = ", DTS"
             }
             if (this.title) {
