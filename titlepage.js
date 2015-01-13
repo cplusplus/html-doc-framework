@@ -76,6 +76,7 @@ limitations under the License.
             if (this.title) {
                 document.title = this.title + stage_suffix;
             }
+            this.completedDomReady = true;
         },
     })
 })();

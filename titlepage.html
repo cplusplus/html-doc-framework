@@ -151,6 +151,16 @@ cxx-titlepage sets the document title based on its <h1> child.
         </figure>
       </div>
     </template>
+
+    <template if="{{!completedDomReady}}">
+      <!--
+        Work around
+        https://github.com/webcomponents/webcomponentsjs/issues/112 by
+        making sure every child element is included in the shadow dom until
+        we've extracted its information.
+      -->
+      <content></content>
+    </template>
   </template>
   <script src="titlepage.js"></script>
 </polymer-element>
