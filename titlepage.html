@@ -102,7 +102,7 @@ cxx-titlepage sets the document title based on its <h1> child.
             </template>
           </template>
           <template if="{{stage == 'ts'}}">
-            <strong>ISO/IEC <content select="cxx-project-number"></content>:{{pubyear}}</strong><br/>
+            <strong class="docname">ISO/IEC <content select="cxx-project-number"></content>:<span class="pubyear">{{pubyear}}</span></strong><br/>
           </template>
           ISO/IEC JTC1 SC22 WG21<br/>
           Secretariat: ANSI
