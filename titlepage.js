@@ -25,7 +25,7 @@ limitations under the License.
         stage: null,
 
         computeStage: function() {
-            var stages = ['draft', 'pdts', 'dts'];
+            var stages = ['draft', 'pdts', 'dts', 'ts'];
             var presentStages = stages.filter(function(stage) {
                 return document.body.classList.contains('cxx-' + stage);
             });
@@ -52,6 +52,7 @@ limitations under the License.
             this.projectNumber = this.querySelector('cxx-project-number');
             this.docnum = this.querySelector('cxx-docnum');
             this.pubdate = this.querySelector('time[pubdate]');
+            this.pubyear = new Date(this.pubdate.textContent.split('-')).getFullYear();
             this.editor = this.querySelector('cxx-editor');
             this.revises = this.querySelector('cxx-revises');
 
