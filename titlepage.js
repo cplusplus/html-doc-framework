@@ -48,6 +48,20 @@ limitations under the License.
             }
         },
 
+        addISOSections: function() {
+                if (this.stage !== 'ts') {
+                    // Only include the ISO requirements in the
+                    // document sent for publication.
+                    return;
+                }
+                var toc = document.querySelector('cxx-toc');
+                if (toc) {
+                    var foreword = document.createElement('cxx-foreword');
+                    foreword.id = 'foreword';
+                    document.body.insertBefore(foreword, toc.nextSibling);
+                }
+        },
+
         domReady: function() {
             this.projectNumber = this.querySelector('cxx-project-number');
             this.docnum = this.querySelector('cxx-docnum');
@@ -77,6 +91,8 @@ limitations under the License.
             if (this.title) {
                 document.title = this.title + stage_suffix;
             }
+
+            this.addISOSections();
             this.completedDomReady = true;
         },
     })

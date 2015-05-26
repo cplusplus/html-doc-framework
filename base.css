@@ -62,12 +62,12 @@ cxx-docnum { string-set: docnum content(); }
 * /deep/ .docname { string-set: docname content(); }
 * /deep/ .pubyear { string-set: pubyear content(); }
 
-cxx-clause { page-break-before: always; }
+cxx-clause, cxx-foreword { page-break-before: always; }
 @media screen {
-    cxx-clause, cxx-toc { margin-top: 3em; }
+    cxx-clause, cxx-toc, cxx-foreword { margin-top: 3em; }
 }
 
-cxx-clause::shadow header { font-size: 150%; }
+cxx-clause::shadow header, cxx-foreword::shadow h1 { font-size: 150%; }
 cxx-toc::shadow h1 { font-size: 150%; }
 cxx-clause cxx-section::shadow header { font-size: 117%; }
 cxx-clause cxx-section cxx-section::shadow header { font-size: 100%; }
@@ -75,7 +75,7 @@ cxx-clause cxx-section cxx-section::shadow header { font-size: 100%; }
 [data-bookmark-label] { bookmark-label: attr(data-bookmark-label); }
 h1 { bookmark-level: 1; }
 cxx-toc::shadow h1 { bookmark-level: 2; }
-cxx-clause h1 { bookmark-level: 2; }
+cxx-clause h1, cxx-foreword h1 { bookmark-level: 2; }
 cxx-clause cxx-section h1 { bookmark-level: 3; }
 cxx-clause cxx-section cxx-section h1 { bookmark-level: 4; }
 /* The <h2> is a subtitle, which shouldn't get a PDF bookmark. */
