@@ -18,7 +18,7 @@ limitations under the License.
         // Default properties
         projectNumber: null,
         docnum: null,
-        pubdate: null,
+        hasPubdate: false,
         editor: null,
         revises: null,
         title: null,
@@ -65,8 +65,14 @@ limitations under the License.
         domReady: function() {
             this.projectNumber = this.querySelector('cxx-project-number');
             this.docnum = this.querySelector('cxx-docnum');
-            this.pubdate = this.querySelector('time[pubdate]');
-            this.pubyear = new Date(this.pubdate.textContent.split('-')).getFullYear();
+            var pubdateElem = this.querySelector('time[pubdate]');
+            this.hasPubdate = !!pubdateElem;
+            if (pubdateElem) {
+                var pubdate = pubdateElem.textContent.split('-');
+                this.pubyear = pubdate[0];
+                this.pubmonth = pubdate[1];
+                this.pubday = pubdate[2];
+            }
             this.editor = this.querySelector('cxx-editor');
             this.revises = this.querySelector('cxx-revises');
 

@@ -68,8 +68,8 @@ cxx-titlepage sets the document title based on its <h1> child.
           <template if="{{docnum}}">
             <tr><th>Document Number:</th><td><content select="cxx-docnum"></content></td></tr>
           </template>
-          <template if="{{pubdate}}">
-            <tr><th>Date:</th><td><content select="time[pubdate]"></content></td></tr>
+          <template if="{{hasPubdate}}">
+            <tr><th>Date:</th><td><time pubdate><span class="pubyear">{{pubyear}}</span>-{{pubmonth}}-{{pubday}}</time></td></tr>
           </template>
           <template if="{{revises}}">
             <tr><th>Revises:</th><td><content select="cxx-revises"></content></td></tr>
@@ -93,7 +93,7 @@ cxx-titlepage sets the document title based on its <h1> child.
         <div class="header">
           <template if="{{stage == 'pdts' || stage == 'dts'}}">
             <strong>ISO/IEC JTC1 SC22 WG21 <content select="cxx-docnum"/></content></strong><br/>
-            Date: <content select="time[pubdate]"></content><br/>
+            Date: <time pubdate><span class="pubyear">{{pubyear}}</span>-{{pubmonth}}-{{pubday}}</time><br/>
             <template if="{{stage == 'pdts'}}">
               ISO/IEC PDTS <content select="cxx-project-number"></content><br/>
             </template>
@@ -178,7 +178,7 @@ cxx-titlepage sets the document title based on its <h1> child.
   <!-- Find your project number at https://isocpp.org/std/status. -->
   <template><content></content></template>
 </polymer-element>
-<polymer-element name="cxx-docnum" noscript>
+<polymer-element name="cxx-docnum" noscript class="docname">
   <template><content></content></template>
 </polymer-element>
 <polymer-element name="cxx-editor" noscript>

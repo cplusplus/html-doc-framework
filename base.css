@@ -58,7 +58,6 @@ body { margin: 0; }
     html, body {height: 100%}
 }
 
-cxx-docnum { string-set: docnum content(); }
 * /deep/ .docname { string-set: docname content(); }
 * /deep/ .pubyear { string-set: pubyear content(); }
 
