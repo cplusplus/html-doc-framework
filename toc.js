@@ -41,12 +41,12 @@ limitations under the License.
         },
 
         clausesChanged: function() {
-            var index = 0;
+            var clause_num = 1;
             this.sections = this.clauses.array().map(function(clause) {
                 if (clause.set_clause_num) {
                     // Don't number things that can't accept numbers, indicated
                     // by not having a set_clause_num method.
-                    clause.set_clause_num(++index);
+                    clause_num = clause.set_clause_num(clause_num);
                 }
                 return this.collectSections(clause);
             }, this);
