@@ -17,16 +17,33 @@ limitations under the License.
     // Record the document that this element is declared in, so we can
     // pull the <dt> template out of it.
     // The condition handles the HTML Imports polyfill:
-    // http://www.polymer-project.org/platform/html-imports.html#other-notes
+    // http://webcomponents.org/polyfills/html-imports/#other-notes
     var importDocument = document._currentScript
         ? document._currentScript.ownerDocument
         : document.currentScript.ownerDocument;
 
-    Polymer('cxx-definition-section', {
+    var CxxDefinitionSectionTerm = Polymer({
+        is: 'cxx-definition-section-term',
+        extends: 'dt',
+
+        joinWithDots: function() {
+            return Array.prototype.join.call(arguments, '.');
+        },
+        prependHash: function(value) {
+            return '#' + value;
+        },
+        surroundWithBrackets: function(value) {
+            return '[' + value + ']';
+        },
+    });
+    Polymer({
+        is: 'cxx-definition-section',
+        extends: 'dl',
+
         ready: function() {
-            var parent_section = this.parentElement;
+            var parent_section = Polymer.dom(this).parentNode;
             while (parent_section && parent_section.tagName != 'CXX-SECTION')
-                parent_section = parent_section.parentElement;
+                parent_section = Polymer.dom(parent_section).parentNode;
             if (!parent_section) {
                 console.error('cxx-definition-section', this,
                               'must be a descendent of a <cxx-section> element.');
@@ -34,20 +51,20 @@ limitations under the License.
             }
 
             var next_term_number = 1;
-            for (var dt = this.firstElementChild; dt;
-                 dt = dt.nextElementSibling) {
+            for (var dt = Polymer.dom(this).firstElementChild; dt;
+                 dt = Polymer.dom(dt).nextSibling) {
                 if (dt.tagName != 'DT')
                     continue;
 
+                var oldDt = dt;
+                dt = new CxxDefinitionSectionTerm();
+                dt.id = oldDt.id;
                 dt.parent_section = parent_section;
                 dt.term_number = next_term_number++;
+                Polymer.dom(dt).innerHTML = Polymer.dom(oldDt).innerHTML;
 
-                var template = importDocument.getElementById(
-                    'cxx-definition-section-term').cloneNode(true);
-                template.removeAttribute('id');
-                template.model = dt;
-
-                dt.createShadowRoot().appendChild(template);
+                Polymer.dom(this).insertBefore(dt, oldDt);
+                Polymer.dom(this).removeChild(oldDt);
             }
         }
     });

@@ -18,22 +18,19 @@ limitations under the License.
     and definitions" section that gets numbered as if each term is a section,
     but doesn't make them show up in the table of contents.
 -->
-<polymer-element name="cxx-definition-section" extends="dl">
+<dom-module id="cxx-definition-section">
+  <style>
+    :host > ::content dt { font-weight: bold; }
+    :host > ::content dd { margin-left: 0; }
+  </style>
+  <template><content></content></template>
+</dom-module>
+<dom-module id="cxx-definition-section-term">
   <template>
-    <style>
-      polyfill-next-selector { content: 'dt'; }
-      ::content dt { font-weight: bold; }
-      polyfill-next-selector { content: 'dd'; }
-      ::content dd { margin-left: 0; }
-    </style>
-
-    <content></content>
-  </template>
-  <template id="cxx-definition-section-term" bind="">
-    {{parent_section.sec_num}}.{{term_number}}
-    <span style="float:right"><a href="#{{id}}">[{{id}}]</a></span>
+    <span>{{joinWithDots(parent_section.sec_num, term_number)}}</span>
+    <span style="float:right"><a href="{{prependHash(id)}}">{{surroundWithBrackets(id)}}</a></span>
     <br clear="both"/>
     <content></content>
   </template>
-  <script src="definition-section.js"></script>
-</polymer-element>
+</dom-module>
+<script src="definition-section.js"></script>

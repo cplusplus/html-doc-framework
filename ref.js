@@ -14,13 +14,46 @@ limitations under the License.
 */
 
 (function() {
-    Polymer('cxx-ref', {
-        to: "",
-        insynopsis: false,
+    Polymer({
+        is: 'cxx-ref',
 
-        observe: {
-            'inElem.index': 'indexChanged'
+        properties: {
+            to: {
+                type: String,
+                value: "",
+            },
+            toElem: {
+                type: Object,
+                observer: 'toElemChanged',
+            },
+            in: {
+                type: String,
+            },
+            inElem: {
+                type: Object,
+                observer: 'inElemChanged',
+            },
+            insynopsis: {
+                type: Boolean,
+                value: false,
+            },
+            targetNumber: {
+                type: String,
+                computed: 'computeTargetNumber(toElem.sec_num, toElem.table_num, toElem.figure_num)',
+            },
+            foreignSectionNumber: {
+                type: String,
+                computed: 'computeForeignSectionNumber(inElem.index, to)',
+            },
+            synopsisLabel: {
+                type: String,
+                computed: 'computeSynopsisLabel(toElem.title_element.textContent)',
+            },
         },
+
+        observers: [
+            'indexChanged(inElem.index)'
+        ],
 
         checkInvariants: function() {
             if (this.in) {
@@ -62,11 +95,26 @@ limitations under the License.
             }
         },
 
+        computeTargetNumber: function(sec_num, table_num, figure_num) {
+            return sec_num || table_num || figure_num;
+        },
+
+        computeForeignSectionNumber: function(foreignIndex, to) {
+            return '\u00A7' + foreignIndex[to];
+        },
+
+        computeSynopsisLabel: function(targetTitle) {
+            return ', ' + targetTitle;
+        },
+
+        prependHash: function(value) {
+            return '#' + value;
+        },
+
         indexChanged: function() {
-            if (!(this.to in this.inElem.index)) {
+            if (this.inElem && !(this.to in this.inElem.index)) {
                 console.error(this.to, 'not found in', this.inElem);
             }
         }
     });
 })()
-

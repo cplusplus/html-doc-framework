@@ -13,10 +13,36 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+var CxxSectionBehavior, CxxSectionElement;
 (function() {
-    Polymer('cxx-section', {
-        // String section number, like "17.2.3". 1-based.
-        sec_num: "?",
+    'use strict';
+
+    CxxSectionBehavior = {
+        properties: {
+            id: {
+                type: String,
+            },
+            number: {
+                type: Number,
+                value: null,
+            },
+            // String section number, like "17.2.3". 1-based.
+            sec_num: {
+                type: String,
+                value: "?",
+                observer: 'sec_numChanged',
+            },
+        },
+
+        // Template helpers:
+        prependHash: function(value) {
+            return '#' + value;
+        },
+        surroundWithBrackets: function(value) {
+            return '[' + value + ']';
+        },
+
+        // External interface:
 
         checkInvariants: function() {
             if (!this.id) {
@@ -28,7 +54,8 @@ limitations under the License.
             this.sec_num = sec_num + '';
             var child_index = 1;
             // Assume there aren't any elements between cxx-section levels.
-            for (var child = this.firstChild; child; child = child.nextSibling) {
+            for (var child = Polymer.dom(this).firstChild; child;
+                 child = Polymer.dom(child).nextSibling) {
                 if (child instanceof CxxSectionElement) {
                     if (child.number)
                         child_index = Number(child.number);
@@ -46,9 +73,9 @@ limitations under the License.
             }
         },
 
-        domReady: function() {
-            var title_element = this.querySelector('h1');
-            if (title_element && title_element.parentElement == this)
+        ready: function() {
+            var title_element = Polymer.dom(this).querySelector('h1');
+            if (title_element && Polymer.dom(title_element).parentElement == this)
                 this.title_element = title_element;
 
             this.numberParagraphChildren();
@@ -56,9 +83,9 @@ limitations under the License.
 
         numberParagraphChildren: function(rootElement, para_num_start) {
             var para_num = para_num_start || 1;
-            for (var child = (rootElement || this).firstElementChild;
+            for (var child = Polymer.dom(rootElement || this).firstElementChild;
                  child;
-                 child = child.nextElementSibling) {
+                 child = Polymer.dom(child).nextElementSibling) {
                 if (child instanceof CxxSectionElement)
                     return para_num;
                 else if (child instanceof HTMLParagraphElement && !child.classList.contains('cont'))
@@ -66,7 +93,7 @@ limitations under the License.
                 else if (child instanceof CxxFunctionElement) {
                     para_num = this.numberParagraph(para_num, child);
                     para_num = this.numberParagraphChildren(child, para_num);
-                } else if (child instanceof CxxFunctionAttributeElement)
+                } else if (child.isCxxFunctionAttribute)
                     para_num = this.numberParagraph(para_num, child);
             }
             return para_num;
@@ -82,12 +109,17 @@ limitations under the License.
                 console.warn('Paragraph already has id:', element);
                 var anchor = document.createElement('a');
                 anchor.id = id;
-                element.insertBefore(anchor, element.firstChild);
+                Polymer.dom(element).insertBefore(anchor, Polymer.dom(element).firstChild);
             } else {
                 element.id = id;
             }
             element.setAttribute('para_num', number);
             return number + 1
         }
-    })
+    };
+
+    CxxSectionElement = Polymer({
+        is: 'cxx-section',
+        behaviors: [CxxSectionBehavior],
+    });
 })();

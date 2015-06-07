@@ -14,35 +14,61 @@ limitations under the License.
 */
 
 (function() {
-    Polymer('cxx-toc', {
-        // Hierarchy :: [{ elem: Element, title: H1, sections: Hierarchy }]
-        sections: [],
+    Polymer({
+        is: 'cxx-internal-toc-level',
+        extends: 'ol',
 
-        // Updated with the list of <cxx-clause> elements in the document each
-        // time such an element is attached or detached.
-        clauses: [],
+        prependHash: function(value) {
+            return '#' + value;
+        },
+        nonEmpty: function(array) {
+            return array.length > 0;
+        },
+    });
+
+    Polymer({
+        is: 'cxx-toc',
+
+        properties: {
+            // Hierarchy :: [{ elem: Element, title: H1, sections: Hierarchy }]
+            sections: {
+                type: Array,
+                value: function() { return []; },
+            },
+
+            // Updated with the list of <cxx-clause> elements in the document each
+            // time such an element is attached or detached.
+            clauses: {
+                type: Array,
+                value: function() { return []; },
+                observer: 'clausesChanged',
+            },
+        },
+
 
         collectSections: function(root) {
             var sections = [];
-            for (var child = root.firstElementChild; child;
-                 child = child.nextElementSibling) {
+            for (var child = Polymer.dom(root).firstElementChild; child;
+                 child = Polymer.dom(child).nextSibling) {
+                if (!child.tagName)
+                    continue;
                 if (child.tagName.toUpperCase() != 'CXX-SECTION')
                     continue;
                 sections.push(this.collectSections(child));
             }
-            var h1 = root.querySelector('h1');
+            var h1 = Polymer.dom(root).querySelector('h1');
             return {elem: root,
-                    title: h1 ? h1.textContent : root.title,
+                    title: h1 ? Polymer.dom(h1).textContent : root.title,
                     sections: sections};
         },
 
         updateClauses: function() {
-            this.clauses = document.querySelectorAll('cxx-foreword,cxx-clause');
+            this.clauses = Polymer.dom(document).querySelectorAll('cxx-foreword,cxx-clause');
         },
 
         clausesChanged: function() {
             var clause_num = 1;
-            this.sections = this.clauses.array().map(function(clause) {
+            this.sections = this.clauses.map(function(clause) {
                 if (clause.set_clause_num) {
                     // Don't number things that can't accept numbers, indicated
                     // by not having a set_clause_num method.
@@ -52,7 +78,7 @@ limitations under the License.
             }, this);
         },
 
-        domReady: function() {
+        ready: function() {
             this.updateClauses();
         }
     })

@@ -76,7 +76,7 @@ limitations under the License.
     // Replaces <caption>s inside <caption>s with <spans>, so that Firefox doesn't
     // omit them from the rendering.
     function fixNestedCaptions(doc) {
-        doc.querySelectorAll('caption caption').array().forEach(function(caption) {
+        doc.querySelectorAll('caption caption').forEach(function(caption) {
             var span = doc.createElement('span');
             span.innerHTML = caption.innerHTML;
             caption.parentNode.insertBefore(span, caption);
@@ -155,9 +155,21 @@ limitations under the License.
         return result;
     }
 
-    Polymer('cxx-publish-button', {
-        publishing: false,
-        flattenedBlob: null,
+    Polymer({
+        is: 'cxx-publish-button',
+
+        properties: {
+            source: String,
+            publishing: {
+                type: Boolean,
+                value: false,
+            },
+            flattenedBlob: {
+                type: String,
+                value: null,
+            },
+        },
+
         publish: function() {
             if (this.publishing) {
                 return;

@@ -13,44 +13,56 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<polymer-element name="cxx-function" constructor="CxxFunctionElement" noscript>
+<dom-module id="cxx-function">
+  <style>
+    :host { display: block; page-break-inside: avoid;}
+    :host:not(:last-child) { margin-bottom: 3ex; }
+    :host > dl { margin: 0; margin-left: 2em; }
+    :host > pre { margin: 0; }
+  </style>
   <template>
-    <style>
-      :host { display: block; page-break-inside: avoid;}
-      :host:not(:last-child) { margin-bottom: 3ex; }
-      :host > dl { margin: 0; margin-left: 2em; }
-      :host > pre { margin: 0; }
-    </style>
     <pre><code><content select="cxx-signature"></content></code></pre>
 
     <dl>
       <content></content>
     </dl>
   </template>
-</polymer-element>
-<polymer-element name="cxx-signature" noscript>
-  <template><style>
-      :host {padding-left: 2em;display:block;text-indent:-2em;}
-      :host(.formatted) {padding-left: 0m; text-indent:0;}
-    </style><content></content></template>
-</polymer-element>
-<polymer-element name="cxx-attribute" constructor="CxxFunctionAttributeElement">
-  <template>
+</dom-module>
+<script>window.CxxFunctionElement = Polymer({is: 'cxx-function'});</script>
+<dom-module id="cxx-signature">
+  <style>
+    :host {padding-left: 2em;display:block;text-indent:-2em;}
+    :host(.formatted) {padding-left: 0m; text-indent:0;}
+  </style>
+  <template><content></content></template>
+  <script>Polymer({is: 'cxx-signature'});</script>
+</dom-module>
+
+<template id="cxx-attribute-template">
+  <dom-module>
     <style>
       :host {display:block; margin-top: .5em; margin-bottom: .5em;}
       dt { float: left; font-style: italic; font-weight: normal; padding-right: 1ex;}
       dd { margin-left: 0em; }
-      polyfill-next-selector { content: 'dd > ul, dd > ol' }
-      ::content > ul, ::content > ol { clear: left; }
+      dd > ::content > ul, dd > ::content > ol { clear: left; }
     </style>
-    <dt>{{heading}}:</dt><dd><content></content></dd>
-  </template>
-  <script>
-    Polymer('cxx-attribute', {
+    <template>
+      <dt>{{appendColon(heading)}}</dt><dd><content></content></dd>
+    </template>
+  </dom-module>
+</template>
+<script>
+  (function() {
+    var script = document._currentScript || document.currentScript;
+    var cxxAttributeTemplate = Polymer.dom(script.ownerDocument).querySelector('#cxx-attribute-template');
+    var cxxAttributeModule = Polymer.dom(cxxAttributeTemplate.content).firstElementChild;
+    var CxxFunctionAttributeBehavior = {
+      isCxxFunctionAttribute: true,
+
       attached: function() {
-        var parent = this.parentNode;
+        var parent = Polymer.dom(this).parentNode;
         while (parent instanceof HTMLModElement)
-          parent = parent.parentNode;
+          parent = Polymer.dom(parent).parentNode;
         if (!(parent instanceof CxxFunctionElement)) {
           console.warn('<' + this.localName +
                        '> element must be a child of <cxx-function> ' +
@@ -58,91 +70,39 @@ limitations under the License.
                        this)
         }
       },
-    });
-  </script>
-</polymer-element>
-<polymer-element name="cxx-requires" extends="cxx-attribute">
-  <script>
-    Polymer('cxx-requires', {
-      heading: 'Requires',
-    });
-  </script>
-</polymer-element>
-<polymer-element name="cxx-preconditions" extends="cxx-attribute">
-  <!-- This extension was introduced by N3916. -->
-  <script>
-    Polymer('cxx-preconditions', {
-      heading: 'Preconditions',
-    });
-  </script>
-</polymer-element>
-<polymer-element name="cxx-effects" extends="cxx-attribute">
-  <script>
-    Polymer('cxx-effects', {
-      heading: 'Effects',
-    });
-  </script>
-</polymer-element>
-<polymer-element name="cxx-synchronization" extends="cxx-attribute">
-  <script>
-    Polymer('cxx-synchronization', {
-      heading: 'Synchronization',
-    });
-  </script>
-</polymer-element>
-<polymer-element name="cxx-postconditions" extends="cxx-attribute">
-  <script>
-    Polymer('cxx-postconditions', {
-      heading: 'Postconditions',
-    });
-  </script>
-</polymer-element>
-<polymer-element name="cxx-returns" extends="cxx-attribute">
-  <script>
-    Polymer('cxx-returns', {
-      heading: 'Returns',
-    });
-  </script>
-</polymer-element>
-<polymer-element name="cxx-throws" extends="cxx-attribute">
-  <script>
-    Polymer('cxx-throws', {
-      heading: 'Throws',
-    });
-  </script>
-</polymer-element>
-<polymer-element name="cxx-complexity" extends="cxx-attribute">
-  <script>
-    Polymer('cxx-complexity', {
-      heading: 'Complexity',
-    });
-  </script>
-</polymer-element>
-<polymer-element name="cxx-exception-safety" extends="cxx-attribute">
-  <script>
-    Polymer('cxx-exception-safety', {
-      heading: 'Exception safety',
-    });
-  </script>
-</polymer-element>
-<polymer-element name="cxx-remarks" extends="cxx-attribute">
-  <script>
-    Polymer('cxx-remarks', {
-      heading: 'Remarks',
-    });
-  </script>
-</polymer-element>
-<polymer-element name="cxx-error-conditions" extends="cxx-attribute">
-  <script>
-    Polymer('cxx-error-conditions', {
-      heading: 'Error conditions',
-    });
-  </script>
-</polymer-element>
-<polymer-element name="cxx-notes" extends="cxx-attribute">
-  <script>
-    Polymer('cxx-notes', {
-      heading: 'Notes',
-    });
-  </script>
-</polymer-element>
+
+      appendColon: function(heading) {
+        return heading + ':';
+      },
+    };
+
+    function registerFunctionAttribute(elementName, heading) {
+      var domModule = document.importNode(cxxAttributeModule, /*deep=*/true);
+      domModule.id = elementName;
+      Polymer.dom(Polymer.dom(cxxAttributeTemplate).parentNode).insertBefore(
+        domModule, Polymer.dom(cxxAttributeTemplate).nextSibling);
+      Polymer({
+        is: elementName,
+        behaviors: [CxxFunctionAttributeBehavior],
+        properties: {
+          heading: {
+            type: String,
+            value: heading
+          }
+        }
+      });
+    };
+    registerFunctionAttribute('cxx-requires', 'Requires');
+    registerFunctionAttribute('cxx-preconditions', 'Preconditions');
+    registerFunctionAttribute('cxx-effects', 'Effects');
+    registerFunctionAttribute('cxx-synchronization', 'Synchronization');
+    registerFunctionAttribute('cxx-postconditions', 'Postconditions');
+    registerFunctionAttribute('cxx-returns', 'Returns');
+    registerFunctionAttribute('cxx-throws', 'Throws');
+    registerFunctionAttribute('cxx-complexity', 'Complexity');
+    registerFunctionAttribute('cxx-exception-safety', 'Exception safety');
+    registerFunctionAttribute('cxx-remarks', 'Remarks');
+    registerFunctionAttribute('cxx-error-conditions', 'Error conditions');
+    registerFunctionAttribute('cxx-notes', 'Notes');
+  })();
+</script>

@@ -27,19 +27,20 @@ limitations under the License.
     in that document.
 -->
 
-<polymer-element name="cxx-ref" attributes="to insynopsis in">
+<dom-module name="cxx-ref">
   <template
-      ><cxx-get-element-by-id elemId="{{in}}" elem="{{inElem}}"></cxx-get-element-by-id
-      ><template if="{{!in}}"><cxx-get-element-by-id elemId="{{to}}" elem="{{toElem}}"></cxx-get-element-by-id></template
-      ><template id="target_num"
-                 ><template if="{{inElem.index}}">{{inElem.name}} <span title="{{to}}">&#xa7;{{inElem.index[to]}}</span></template
-                 ><template if="{{!in}}"><a title="{{to}}" href="#{{to}}"
-                   ><template if="{{toElem.sec_num}}">{{toElem.sec_num}}</template
-                   ><template if="{{toElem.table_num}}">Table {{toElem.table_num}}</template
-                   ><template if="{{toElem.figure_num}}">Figure {{toElem.figure_num}}</template></a></template
-      ></template
-      ><template if="{{insynopsis}}">// <i><template bind="" ref="target_num"></template>, {{toElem.title_element.textContent}}</i></template
-      ><template if="{{!insynopsis}}"><template bind="" ref="target_num"></template></template
+    ><cxx-get-element-by-id elemId="{{in}}" elem="{{inElem}}"></cxx-get-element-by-id
+    ><template is="dom-if" if="{{!in}}"><cxx-get-element-by-id elemId="{{to}}" elem="{{toElem}}"></cxx-get-element-by-id></template
+
+    ><template is="dom-if" if="{{insynopsis}}">// <i
+      ><template is="dom-if" if="{{inElem.index}}"><span>{{inElem.name}}</span> <span title="{{to}}">{{foreignSectionNumber}}</span></template
+      ><template is="dom-if" if="{{!in}}"><a title="{{to}}" href="{{prependHash(to)}}">{{targetNumber}}</a></template
+      >{{synopsisLabel}}</i></template
+
+    ><template is="dom-if" if="{{!insynopsis}}"
+      ><template is="dom-if" if="{{inElem.index}}"><span>{{inElem.name}}</span> <span title="{{to}}">{{foreignSectionNumber}}</span></template
+      ><template is="dom-if" if="{{!in}}"><a title="{{to}}" href="{{prependHash(to)}}">{{targetNumber}}</a></template
+    ></template
   ></template>
   <script src="ref.js"></script>
-</polymer-element>
+</dom-module>

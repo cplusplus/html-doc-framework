@@ -10,7 +10,9 @@
     "tests"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#0.5.2",
-    "core-ajax": "Polymer/core-ajax#0.5.2"
+    "polymer": "Polymer/polymer#^1.0.0",
+    "iron-ajax": "PolymerElements/iron-ajax#^1.0.0",
+    "promise-polyfill": "PolymerLabs/promise-polyfill#^1.0.0",
+    "fetch": "github/fetch#^0.9.0"
   }
 }

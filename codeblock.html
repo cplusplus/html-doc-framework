@@ -25,22 +25,25 @@ limitations under the License.
   TODO: This could call into a syntax highlighter that styles
   comments correctly.
 -->
-<polymer-element name="cxx-codeblock">
+<dom-module name="cxx-codeblock">
+  <style>
+    :host { display: block; }
+  </style>
   <template>
-    <style>
-      :host { display: block; }
-    </style>
     <pre><code><content></content></code></pre>
   </template>
   <script>
-    Polymer('cxx-codeblock', {
+    Polymer({
+      is: 'cxx-codeblock',
+
       attached: function() {
-        if (this.firstChild.nodeType == Node.TEXT_NODE)
-          this.firstChild.nodeValue = this.firstChild.nodeValue.replace(/^\s+/, '');
-        if (this.lastChild.nodeType == Node.TEXT_NODE)
-          this.lastChild.nodeValue = this.lastChild.nodeValue.replace(/\s+$/, '');
+        var first = Polymer.dom(this).firstChild;
+        if (first.nodeType == Node.TEXT_NODE)
+          first.nodeValue = first.nodeValue.replace(/^\s+/, '');
+        var last = Polymer.dom(this).lastChild;
+        if (last.nodeType == Node.TEXT_NODE)
+          last.nodeValue = last.nodeValue.replace(/\s+$/, '');
       }
     });
   </script>
-</polymer-element>
-
+</dom-module>

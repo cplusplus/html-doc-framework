@@ -15,38 +15,45 @@ limitations under the License.
 
 <!-- Draws a table of contents based on the <cxx-clause> and <cxx-section> elements. -->
 
-<polymer-element name="cxx-toc">
+<dom-module id="cxx-toc">
+  <style>
+    :host { display: block; }
+    nav > ol { font-weight: bold; }
+  </style>
   <template>
-    <style>
-      :host { display: block; }
-      nav > ol { font-weight: bold; }
-      ol { font-weight: normal; padding-left: 0; margin-left: 0; }
-
-      /* Browsers don't support ::marker or display:marker, so emulate it. */
-      li { list-style-type: none; }
-      .marker { display: inline-block; }
-
-      li .marker { width: 2em; text-align: left; }
-      ol ol { margin-left: 2em; }
-      li li .marker { width: 3em; }
-      ol ol ol { margin-left: 3em; }
-      li li li .marker { width: 3.5em; }
-      ol ol ol ol { margin-left: 3.5em; }
-      li li li li .marker { width: 4.5em; }
-    </style>
     <nav>
       <h1>Contents</h1>
-      <template bind="" id="hierarchy">
-        <template if="{{sections.length > 0}}">
-          <ol>
-            <template repeat="{{sections}}">
-              <li><template if="{{elem.sec_num}}"><span class="marker">{{elem.sec_num}}</span></template><a href="#{{elem.id}}">{{title}}</a><template bind="" ref="hierarchy"
-              ></template></li>
-            </template>
-          </ol>
-        </template>
-      </template>
+      <ol is="cxx-internal-toc-level" sections="{{sections}}"></ol>
     </nav>
   </template>
-  <script src="toc.js"></script>
-</polymer-element>
+</dom-module>
+<dom-module id="cxx-internal-toc-level">
+  <style>
+    ol { font-weight: normal; padding-left: 0; }
+
+    /* Browsers don't support ::marker or display:marker, so emulate it. */
+    li { list-style-type: none; }
+    .marker { display: inline-block; }
+
+    :host { padding-left: 0; margin-left: 0; }
+    li .marker { width: 2em; text-align: left; }
+    :host ol { margin-left: 2em; }
+    li /deep/ li .marker { width: 3em; }
+    :host ol::shadow ol { margin-left: 3em; }
+    li /deep/ li /deep/ li .marker { width: 3.5em; }
+    :host ol::shadow ol::shadow ol { margin-left: 3.5em; }
+    li /deep/ li /deep/ li /deep/ li .marker { width: 4.5em; }
+  </style>
+  <template>
+    <template is="dom-repeat" items="{{sections}}">
+      <li
+        ><template is="dom-if" if="{{item.elem.sec_num}}"><span class="marker">{{item.elem.sec_num}}</span></template
+        ><a href="{{prependHash(item.elem.id)}}">{{item.title}}</a
+        ><template is="dom-if" if="{{nonEmpty(item.sections)}}">
+          <ol is="cxx-internal-toc-level" sections="{{item.sections}}"></ol>
+        </template
+      ></li>
+    </template>
+  </template>
+</dom-module>
+<script src="toc.js"></script>

@@ -17,13 +17,12 @@ limitations under the License.
     Uses the HTML <figure> content model, but automatically adds a number to
     the <figcaption>.
 -->
-<polymer-element name="cxx-figure" constructor="CxxFigureElement">
+<dom-module name="cxx-figure">
   <template>
     <style>
       :host { margin-left: auto; margin-right: auto; }
       figcaption { white-space: nowrap; text-align: center; }
-      polyfill-next-selector { content: 'figcaption figcaption' }
-      ::content figcaption { display: inline; }
+      figcaption > ::content figcaption { display: inline; }
 
     </style>
     <figure>
@@ -34,14 +33,15 @@ limitations under the License.
   <script>
     (function() {
       function renumberFigures() {
-        document.querySelectorAll('cxx-figure').array().forEach(function(figure, index) {
+        Polymer.dom(document).querySelectorAll('cxx-figure').forEach(function(figure, index) {
           figure.figure_num = index + 1;
         });
       }
-      Polymer('cxx-figure', {
-        domReady: renumberFigures,
+      window.CxxFigureElement = Polymer({
+        is: 'cxx-figure',
+        attached: renumberFigures,
         detached: renumberFigures,
       });
     })();
   </script>
-</polymer-element>
+</dom-module>

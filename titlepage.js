@@ -14,75 +14,98 @@ limitations under the License.
 */
 
 (function() {
-    Polymer('cxx-titlepage', {
-        // Default properties
-        projectNumber: null,
-        docnum: null,
-        hasPubdate: false,
-        editor: null,
-        revises: null,
-        title: null,
-        stage: null,
+    Polymer({
+        is: 'cxx-titlepage',
 
+        properties: {
+            projectNumber: {
+                type: Object,
+                value: null,
+            },
+            hasDocnum: Boolean,
+            hasPubdate: Boolean,
+            hasEditor: Boolean,
+            hasRevises: Boolean,
+            title: {
+                type: String,
+                value: null,
+            },
+            stage: {
+                type: String,
+                value: null,
+            },
+            completedDomReady: {
+                type: Boolean,
+                value: false,
+            },
+        },
+
+        // Template helpers:
+        concat: function() {
+            return Array.prototype.join.call(arguments, '');
+        },
+        stageIs: function(stage) {
+            return Array.prototype.slice.call(arguments, 1).some(function(expected) {
+                return stage === expected;
+            });
+        },
+
+        // Other members:
         computeStage: function() {
+            if (this.stage) {
+                console.error('Move the document stage into a "cxx-' + this.stage +
+                              '" class on <body>.');
+            }
+
             var stages = ['draft', 'pdts', 'dts', 'ts'];
             var presentStages = stages.filter(function(stage) {
                 return document.body.classList.contains('cxx-' + stage);
             });
             if (presentStages.length == 0) {
-                if (!this.stage) {
-                    console.error('Couldn\'t find a document stage in body.classList:', document.body.classList);
-                } else if (stages.indexOf(this.stage) == -1) {
-                    console.error('Unexpected stage: ' + this.stage);
-                } else {
-                    document.body.classList.add('cxx-' + this.stage);
-                }
+                console.error('Couldn\'t find a document stage in body.classList:', document.body.classList);
             } else if (presentStages.length > 1) {
                 console.error('Found multiple document stages in body.classList:', presentStages);
             } else {
-                if (this.stage) {
-                    console.warn('Document stage set on both <body> ("' + presentStages[0] +
-                                 '") and <cxx-titlepage> ("' + this.stage + '")');
-                }
                 this.stage = presentStages[0];
             }
+            Polymer.dom(this).classList.add('cxx-' + this.stage);
         },
 
         addISOSections: function() {
-                if (this.stage !== 'ts') {
-                    // Only include the ISO requirements in the
-                    // document sent for publication.
-                    return;
-                }
-                var toc = document.querySelector('cxx-toc');
-                if (toc) {
-                    var foreword = document.createElement('cxx-foreword');
-                    foreword.id = 'foreword';
-                    document.body.insertBefore(foreword, toc.nextSibling);
-                }
+            if (this.stage !== 'ts') {
+                // Only include the ISO requirements in the
+                // document sent for publication.
+                return;
+            }
+            var toc = Polymer.dom(document).querySelector('cxx-toc');
+            if (toc) {
+                var foreword = document.createElement('cxx-foreword');
+                foreword.id = 'foreword';
+                document.body.insertBefore(foreword, toc.nextSibling);
+            }
         },
 
-        domReady: function() {
-            this.projectNumber = this.querySelector('cxx-project-number');
-            this.docnum = this.querySelector('cxx-docnum');
-            var pubdateElem = this.querySelector('time[pubdate]');
-            this.hasPubdate = !!pubdateElem;
-            if (pubdateElem) {
-                var pubdate = pubdateElem.textContent.split('-');
-                this.pubyear = pubdate[0];
-                this.pubmonth = pubdate[1];
-                this.pubday = pubdate[2];
+        ready: function() {
+            this.projectNumber = Polymer.dom(this).querySelector('cxx-project-number');
+            this.hasDocnum = !!Polymer.dom(this).querySelector('cxx-docnum');
+            var pubdate = Polymer.dom(this).querySelector('time[pubdate]');
+            this.hasPubdate = !!pubdate;
+            if (pubdate) {
+                var splitPubdate = pubdate.textContent.split('-');
+                this.pubyear = splitPubdate[0];
+                this.pubmonth = splitPubdate[1];
+                this.pubday = splitPubdate[2];
             }
-            this.editor = this.querySelector('cxx-editor');
-            this.revises = this.querySelector('cxx-revises');
+            this.hasEditor = !!Polymer.dom(this).querySelector('cxx-editor');
+            this.hasRevises = !!Polymer.dom(this).querySelector('cxx-revises');
 
-            var title = this.querySelector('h1:lang(en)') || this.querySelector('h1');
+            var title = Polymer.dom(this).querySelector('h1:lang(en)') || Polymer.dom(this).querySelector('h1');
             if (title) {
-                this.title = title.textContent;
+                this.title = Polymer.dom(title).textContent;
             }
-            this.title_fr = this.querySelector('h2:lang(fr)');
+            this.title_fr = Polymer.dom(this).querySelector('h2:lang(fr)');
             if (this.title_fr) {
-                this.title_fr = this.title_fr.textContent;
+                this.title_fr = Polymer.dom(this.title_fr).textContent;
             }
 
             this.computeStage();
@@ -101,5 +124,14 @@ limitations under the License.
             this.addISOSections();
             this.completedDomReady = true;
         },
-    })
+    });
+    Polymer({is: 'cxx-project-number'});
+    Polymer({
+        is: 'cxx-docnum',
+        created: function() {
+            // .docname is used to set up page headers in the PDF version.
+            Polymer.dom(this).classList.add('docname');
+        },
+    });
+    Polymer({is: 'cxx-editor'});
 })();

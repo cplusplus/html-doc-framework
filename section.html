@@ -22,23 +22,21 @@ limitations under the License.
     Also recognizes attributes 'id' and 'title', but marking these as attributes
     cause problems for the ShadowDOM polyfill.
 -->
-<polymer-element name="cxx-section" constructor="CxxSectionElement" attributes="number">
+<dom-module id="cxx-section">
+  <style>
+    :host { display: block; }
+    :host:target {background-color: inherit;}
+    :host:target header > ::content > h1 {background-color: #fed;}
+    header > ::content > h1 { display: inline; font-size: 100%; }
+    header { font-weight: bold; margin-top: 20px; margin-bottom: 20px;
+      page-break-inside: avoid; page-break-after: avoid; }
+    header::after { clear:both; display: block; content: " "; height: 0 }
+  </style>
   <template>
-    <style>
-      :host { display: block; }
-      :host:target {background-color: inherit;}
-      :host:target > section > h1 {background-color: #fed;}
-      polyfill-next-selector { content: 'header > h1' }
-      ::content h1 { display: inline; font-size: 100%; }
-      header { font-weight: bold; margin-top: 20px; margin-bottom: 20px;
-               page-break-inside: avoid; page-break-after: avoid; }
-      header::after { clear:both; display: block; content: " "; height: 0 }
-    </style>
-
     <section>
-      <header><span class="section-number">{{sec_num}}</span> <content select="h1"></content> <span style="float:right"><a href="#{{id}}">[{{id}}]</a></span></header>
+      <header><span class="section-number">{{sec_num}}</span> <content select="h1"></content> <span style="float:right"><a href="{{prependHash(id)}}">{{surroundWithBrackets(id)}}</a></span></header>
       <content></content>
     </section>
   </template>
-  <script src="section.js"></script>
-</polymer-element>
+</dom-module>
+<script src="section.js"></script>

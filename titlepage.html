@@ -17,68 +17,60 @@ limitations under the License.
 Has children: cxx-docnum, time[pubdate], cxx-editor, cxx-revises,
 and <h1> for the title.
 
-The document stage can be set in two ways:
-  1. Add a 'cxx-draft', 'cxx-pdts', or `cxx-dts' class to the <body> element.
-  2. Set the <cxx-titlepage stage> attribute to 'draft', 'pdts', or `dts`.
-Each will be propagated to the other.
+The document stage is set by adding a 'cxx-draft', 'cxx-pdts', 'cxx-dts', or 'cxx-ts'
+class to the <body> element.
 We'll add more stages as our documents get to them.
 
 cxx-titlepage sets the document title based on its <h1> child.
 -->
-<polymer-element name="cxx-titlepage" attributes="stage">
+<dom-module id="cxx-titlepage">
+  <style>
+    :host, .page { display: block; min-height: 100%; }
+    .page { page-break-before: always; page-break-after: always; min-height: 100vh; margin-bottom: 2em; }
+    @media print {
+      /* Using an exact height for printed documents works around a bug in
+         Prince that breaks footnotes when the html/body height is set to
+         100%. */
+      .page { height: 8.8in; }
+    }
+
+    /* position:relative on :host makes position:absolute on its children work
+       relative to :host's bounds. */
+    .page { position: relative; }
+    table td, table th { border: none; }
+
+    /* Inside a document with the .cxx-draft class. */
+    .header.draft { position: absolute; right: 0; top: 0; }
+    h1.draft { position: absolute; top: 40%; text-align: center; }
+    p.warning { position: absolute; bottom: 5%; }
+
+    /* Inside a document with the .cxx-pdts, .cxx-dts, or .cxx-ts classes. */
+    .header.ballot { position: absolute; right: 0; top: 0; text-align: right; }
+    .header.ballot ::content cxx-docnum { font-size: 150%; }
+    .header.ballot cxx-docnum { font-size: 150%; }
+    hgroup.ballot { position: absolute; top: 30%; }
+    hgroup.ballot * { margin: 0; }
+    hgroup.ballot h1 { font-size: 150%; font-weight: bold; }
+    hgroup.ballot h2 { font-size: 100%; font-weight: normal; }
+    .footer { position: absolute; left: 0; bottom: 5%; }
+    figure { border: #111 solid 1px; padding: 10px; margin-left: auto; margin-right: auto; }
+    figcaption { text-align: center; font-weight: bold; }
+    figure.warning { position: absolute; bottom: 20%; }
+    .copyright address { font-style: normal; margin-left: 2em; }
+    .copyright address a { color: inherit; text-decoration: inherit; }
+
+    th { text-align: left; vertical-align: top; }
+  </style>
   <template>
-    <style>
-      :host, .page { display: block; min-height: 100%; }
-      .page { page-break-before: always; page-break-after: always; min-height: 100vh; margin-bottom: 2em; }
-      @media print {
-        /* Using an exact height for printed documents works around a bug in
-           Prince that breaks footnotes when the html/body height is set to
-           100%. */
-        .page { height: 8.8in; }
-      }
-
-      /* position:relative on :host makes position:absolute on its children work
-         relative to :host's bounds. */
-      .page { position: relative; }
-      table td, table th { border: none; }
-
-      :host-context(body.cxx-draft) .header { position: absolute; right: 0; top: 0; }
-      :host-context(body.cxx-draft) h1 { position: absolute; top: 40%; text-align: center; }
-      :host-context(body.cxx-draft) p.warning { position: absolute; bottom: 5%; }
-
-      :host-context(body.cxx-pdts, body.cxx-dts, body.cxx-ts) .header { position: absolute; right: 0; top: 0; text-align: right; }
-      :host-context(body.cxx-pdts, body.cxx-dts, body.cxx-ts) .header ::content cxx-docnum { font-size: 150%; }
-      :host-context(body.cxx-pdts, body.cxx-dts, body.cxx-ts) .header cxx-docnum { font-size: 150%; }
-      :host-context(body.cxx-pdts, body.cxx-dts, body.cxx-ts) hgroup { position: absolute; top: 30%; }
-      :host-context(body.cxx-pdts, body.cxx-dts, body.cxx-ts) hgroup * { margin: 0; }
-      :host-context(body.cxx-pdts, body.cxx-dts, body.cxx-ts) hgroup h1 { font-size: 150%; font-weight: bold; }
-      :host-context(body.cxx-pdts, body.cxx-dts, body.cxx-ts) hgroup h2 { font-size: 100%; font-weight: normal; }
-      :host-context(body.cxx-pdts, body.cxx-dts, body.cxx-ts) .footer { position: absolute; left: 0; bottom: 5%; }
-      :host-context(body.cxx-pdts, body.cxx-dts, body.cxx-ts) figure { border: #111 solid 1px; padding: 10px; margin-left: auto; margin-right: auto; }
-      :host-context(body.cxx-pdts, body.cxx-dts, body.cxx-ts) figcaption { text-align: center; font-weight: bold; }
-      :host-context(body.cxx-pdts, body.cxx-dts, body.cxx-ts) .warning { position: absolute; bottom: 20%; }
-      :host-context(body.cxx-pdts, body.cxx-dts, body.cxx-ts) .copyright address { font-style: normal; margin-left: 2em; }
-      :host-context(body.cxx-pdts, body.cxx-dts, body.cxx-ts) .copyright address a { color: inherit; text-decoration: inherit; }
-
-      th { text-align: left; vertical-align: top; }
-    </style>
-    <template if="{{stage == 'draft'}}">
+    <template is="dom-if" if="{{stageIs(stage, 'draft')}}">
       <div class="page">
-        <table class="header">
-          <template if="{{docnum}}">
-            <tr><th>Document Number:</th><td><content select="cxx-docnum"></content></td></tr>
-          </template>
-          <template if="{{hasPubdate}}">
-            <tr><th>Date:</th><td><time pubdate><span class="pubyear">{{pubyear}}</span>-{{pubmonth}}-{{pubday}}</time></td></tr>
-          </template>
-          <template if="{{revises}}">
-            <tr><th>Revises:</th><td><content select="cxx-revises"></content></td></tr>
-          </template>
-          <template if="{{editor}}">
-            <tr><th>Editor:</th><td><content select="cxx-editor"></content></td></tr>
-          </template>
+        <table class="header draft">
+          <tr hidden$="{{!hasDocnum}}"><th>Document Number:</th><td><content select="cxx-docnum"></content></td></tr>
+          <tr hidden$="{{!hasPubdate}}"><th>Date:</th><td><time pubdate><span class="pubyear">{{pubyear}}</span>-<span>{{concat(pubmonth, '-', pubday)}}</span></time></td></tr>
+          <tr hidden$="{{!hasRevises}}"><th>Revises:</th><td><content select="cxx-revises"></content></td></tr>
+          <tr hidden$="{{!hasEditor}}"><th>Editor:</th><td><content select="cxx-editor"></content></td></tr>
         </table>
-        <h1>Working Draft, {{title}}</h1>
+        <h1 class="draft">{{concat('Working Draft\, ', title)}}</h1>
         <p class="warning"><strong>Note: this is an early draft. It’s known to be
         incomplet and incorrekt, and it has lots of b<span
         style="margin-left: -1.2pt; margin-right: 1pt">a</span>d<span
@@ -88,29 +80,29 @@ cxx-titlepage sets the document title based on its <h1> child.
       </div>
     </template>
 
-    <template if="{{stage == 'pdts' || stage == 'dts' || stage == 'ts'}}">
+    <template is="dom-if" if="{{stageIs(stage, 'pdts', 'dts', 'ts')}}">
       <div class="page">
-        <div class="header">
-          <template if="{{stage == 'pdts' || stage == 'dts'}}">
+        <div class="header ballot">
+          <template is="dom-if" if="{{stageIs(stage, 'pdts', 'dts')}}">
             <strong>ISO/IEC JTC1 SC22 WG21 <content select="cxx-docnum"/></content></strong><br/>
-            Date: <time pubdate><span class="pubyear">{{pubyear}}</span>-{{pubmonth}}-{{pubday}}</time><br/>
-            <template if="{{stage == 'pdts'}}">
+            Date: <time pubdate><span class="pubyear">{{pubyear}}</span>-<span>{{concat(pubmonth, '-', pubday)}}</span></time><br/>
+            <template is="dom-if" if="{{stageIs(stage, 'pdts')}}">
               ISO/IEC PDTS <content select="cxx-project-number"></content><br/>
             </template>
-            <template if="{{stage == 'dts'}}">
+            <template is="dom-if" if="{{stageIs(stage, 'dts')}}">
               ISO/IEC DTS <content select="cxx-project-number"></content><br/>
             </template>
           </template>
-          <template if="{{stage == 'ts'}}">
+          <template is="dom-if" if="{{stageIs(stage, 'ts')}}">
             <strong class="docname">ISO/IEC <content select="cxx-project-number"></content>:<span class="pubyear">{{pubyear}}</span></strong><br/>
           </template>
           ISO/IEC JTC1 SC22 WG21<br/>
           Secretariat: ANSI
         </div>
-        <hgroup>
-          <h1>Programming Languages — {{title}}</h1>
-          <template if="{{title_fr}}">
-            <h2>Langages de programmation — {{title_fr}}</h2>
+        <hgroup class="ballot">
+          <h1>{{concat('Programming Languages — ', displayTitle)}}</h1>
+          <template is="dom-if" if="{{title_fr}}">
+            <h2>{{concat('Langages de programmation — ', title_fr)}}</h2>
           </template>
         </hgroup>
         <figure class="warning">
@@ -122,15 +114,15 @@ cxx-titlepage sets the document title based on its <h1> child.
           patent rights of which they are aware and to provide supporting documentation.</p>
         </figure>
         <div class="footer">
-          <template if="{{stage == 'pdts'}}">
+          <template is="dom-if" if="{{stageIs(stage, 'pdts')}}">
             Document type: Proposed Draft Technical Specification<br/>
             Document stage: (30) Committee<br/>
           </template>
-          <template if="{{stage == 'dts'}}">
+          <template is="dom-if" if="{{stageIs(stage, 'dts')}}">
             Document type: Draft Technical Specification<br/>
             Document stage: (40) Enquiry<br/>
           </template>
-          <template if="{{stage == 'ts'}}">
+          <template is="dom-if" if="{{stageIs(stage, 'ts')}}">
             Document type: Technical Specification<br/>
             Document stage: (60) Publication<br/>
           </template>
@@ -162,7 +154,7 @@ cxx-titlepage sets the document title based on its <h1> child.
       </div>
     </template>
 
-    <template if="{{!completedDomReady}}">
+    <template is="dom-if" restamp if="{{!completedDomReady}}">
       <!--
         Work around
         https://github.com/webcomponents/webcomponentsjs/issues/112 by
@@ -172,15 +164,15 @@ cxx-titlepage sets the document title based on its <h1> child.
       <content></content>
     </template>
   </template>
-  <script src="titlepage.js"></script>
-</polymer-element>
-<polymer-element name="cxx-project-number" noscript>
+</dom-module>
+<dom-module id="cxx-project-number">
   <!-- Find your project number at https://isocpp.org/std/status. -->
   <template><content></content></template>
-</polymer-element>
-<polymer-element name="cxx-docnum" noscript class="docname">
+</dom-module>
+<dom-module id="cxx-docnum">
   <template><content></content></template>
-</polymer-element>
-<polymer-element name="cxx-editor" noscript>
+</dom-module>
+<dom-module id="cxx-editor">
   <template><content></content></template>
-</polymer-element>
+</dom-module>
+<script src="titlepage.js"></script>

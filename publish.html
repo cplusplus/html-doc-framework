@@ -22,15 +22,15 @@ limitations under the License.
      If the 'source' attribute is present, a "Sources at ..." comment
      will appear at the top of the result document.
 -->
-<polymer-element name="cxx-publish-button" attributes="source">
+<dom-module id="cxx-publish-button">
+  <style>
+    :host {display: block;}
+  </style>
   <template>
-    <style>
-      :host {display: block;}
-    </style>
-    <template if="{{ !flattenedBlob }}">
-      <button on-click="{{publish}}" disabled?="{{ publishing }}">Publish</button>
+    <template is="dom-if" if="{{ !flattenedBlob }}">
+      <button on-tap="publish" disabled$="{{ publishing }}">Publish</button>
     </template>
-    <template if="{{ flattenedBlob }}">
+    <template is="dom-if" if="{{ flattenedBlob }}">
       <p>Published:</p>
       <ul>
         <li><a href="{{ flattenedBlob }}">Flattened document</a></li>
@@ -39,4 +39,4 @@ limitations under the License.
     </template>
   </template>
   <script src="publish.js"></script>
-</polymer-element>
+</dom-module>

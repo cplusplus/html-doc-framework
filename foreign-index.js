@@ -13,7 +13,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-Polymer('cxx-foreign-index', {
+Polymer({
+    is: 'cxx-foreign-index',
+
+    properties: {
+        src: {
+            type: String,
+        },
+        name: {
+            type: String,
+        },
+    },
+
     attachIndex: function(e) {
         this.index = e.detail.response;
         if (typeof(this.index) != 'object') {

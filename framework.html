@@ -13,10 +13,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
+<script>
+  window.Polymer = window.Polymer || {};
+  window.Polymer.dom = 'shady';
+</script>
 <link rel="stylesheet" href="base.css" shim-shadowdom/>
-<script src="promise-0.1.1.min.js"></script>
 <!-- "../" selects the bower_components directory if this project was
 itself installed through bower. -->
+<link rel="import" href="../promise-polyfill/promise-polyfill-lite.html"></link>
+<script src="../fetch/fetch.js"></script>
 <link rel="import" href="../polymer/polymer.html"/>
 <link rel="import" href="function.html"/>
 <link rel="import" href="section.html"/>

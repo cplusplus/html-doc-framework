@@ -21,23 +21,20 @@ limitations under the License.
     "use strict";
     var includeProto = Object.create(HTMLElement.prototype);
     includeProto.attachedCallback = function() {
-        this.link = document.createElement('link');
-        this.link.setAttribute('rel', 'import');
-        this.link.setAttribute('href', this.getAttribute('href'));
-        this.link.onload = this.loaded.bind(this);
-        this.link.onerror = function(e) {
-            console.error(e);
-        }
-        document.head.appendChild(this.link);
-    };
-    includeProto.loaded = function(e) {
-        var imported = this.link.import;
-        this.link.parentNode.removeChild(this.link);
-        var parent = this.parentNode;
-        for (var elem = imported.body.firstChild; elem; elem = elem.nextSibling) {
-            parent.insertBefore(elem.cloneNode(true), this);
-        }
-        parent.removeChild(this);
+        var self = this;
+        fetch(this.getAttribute('href'))
+            .then(function(response) { return response.text(); })
+            .then(function(text) {
+                var parent = Polymer.dom(self).parentNode;
+                var div = document.createElement('div');
+                div.innerHTML = text;
+                var nextSibling;
+                for (var elem = Polymer.dom(div).firstChild; elem; elem = nextSibling) {
+                    nextSibling = Polymer.dom(elem).nextSibling;
+                    Polymer.dom(parent).insertBefore(elem, self);
+                }
+                Polymer.dom(parent).removeChild(self);
+            });
     };
     document.registerElement('cxx-include', {prototype: includeProto});
 })();

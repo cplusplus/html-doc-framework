@@ -20,15 +20,15 @@ limitations under the License.
 -->
 
 <link rel="import"
-      href="../core-ajax/core-ajax.html">
-<polymer-element name="cxx-foreign-index" attributes="src name">
+      href="../iron-ajax/iron-ajax.html">
+<dom-module name="cxx-foreign-index" attributes="src name">
+  <style> :host {display: none} </style>
   <template>
-    <style> :host {display: none} </style>
-    <core-ajax auto=""
+    <iron-ajax auto
                   url="{{src}}"
                   handleAs="json"
-                  on-core-response="{{attachIndex}}">
-    </core-ajax>
+                  on-response="attachIndex">
+    </iron-ajax>
   </template>
   <script src="foreign-index.js"></script>
-</polymer-element>
+</dom-module>

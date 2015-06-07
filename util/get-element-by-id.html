@@ -21,7 +21,7 @@ Put this element in another element's <template> as:
 Then the containing element can define a method `variableToFillInChanged` that
 will be called when an element with the right ID is added to the document.
 -->
-<polymer-element name="cxx-get-element-by-id" attributes="elemId elem">
+<dom-module id="cxx-get-element-by-id">
   <template><style>:host {display: none}</style></template>
   <script>
     (function() {
@@ -38,11 +38,11 @@ will be called when an element with the right ID is added to the document.
         // addedNodes' IDs misses a bunch of IDs. Instead, we'll just search
         // for all the IDs we care about, any time anything changes.
         Object.keys(pendingIds).forEach(function(id) {
-          var elem = document.getElementById(id);
+          var elem = Polymer.dom(document).getElementById(id);
           if (elem) {
             pendingIds[id].forEach(function(waiting) {
               if (waiting.elemId == id)
-                waiting.elem = elem;
+                waiting._setElem(elem);
             });
             delete pendingIds[id];
           }
@@ -67,14 +67,27 @@ will be called when an element with the right ID is added to the document.
         });
       }
 
-      Polymer('cxx-get-element-by-id', {
-        elemId: '',
+      Polymer({
+        is: 'cxx-get-element-by-id',
+
+        properties: {
+          elemId: {
+            type: String,
+            value: '',
+            observer: 'elemIdChanged',
+          },
+          elem: {
+            type: Object,
+            notify: true,
+            readOnly: true,
+          },
+        },
         elemIdChanged: function() {
           if (!this.elemId) {
-            this.elem = null;
+            this._setElem(null);
             return;
           }
-          this.elem = document.getElementById(this.elemId);
+          this._setElem(Polymer.dom(document).getElementById(this.elemId));
           if (!this.elem) {
             watchFor(this.elemId, this);
           }
@@ -82,4 +95,4 @@ will be called when an element with the right ID is added to the document.
       });
     })();
   </script>
-</polymer-element>
+</dom-module>
