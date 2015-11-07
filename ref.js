@@ -17,6 +17,10 @@ limitations under the License.
     Polymer({
         is: 'cxx-ref',
 
+        behaviors: [
+            CxxTemplateHelpersBehavior,
+        ],
+
         properties: {
             to: {
                 type: String,
@@ -28,32 +32,25 @@ limitations under the License.
             },
             in: {
                 type: String,
+                value: null,
             },
             inElem: {
                 type: Object,
                 observer: 'inElemChanged',
             },
+            index: {
+                type: Object,
+                observer: 'indexChanged',
+            },
             insynopsis: {
                 type: Boolean,
                 value: false,
             },
-            targetNumber: {
-                type: String,
-                computed: 'computeTargetNumber(toElem.sec_num, toElem.table_num, toElem.figure_num)',
-            },
             foreignSectionNumber: {
                 type: String,
-                computed: 'computeForeignSectionNumber(inElem.index, to)',
-            },
-            synopsisLabel: {
-                type: String,
-                computed: 'computeSynopsisLabel(toElem.title_element.textContent)',
+                computed: 'computeForeignSectionNumber(index, to)',
             },
         },
-
-        observers: [
-            'indexChanged(inElem.index)'
-        ],
 
         checkInvariants: function() {
             if (this.in) {
@@ -72,47 +69,53 @@ limitations under the License.
             }
         },
 
-        inElemChanged: function() {
+        attached: function() {
+            if (this.inElem) {
+                this.inElem.references.add(this);
+            }
+        },
+        detached: function() {
+            if (this.inElem) {
+                this.inElem.references.delete(this);
+            }
+        },
+
+        inElemChanged: function(newInElem, oldInElem) {
             if (this.inElem &&
                 this.inElem.tagName.toUpperCase() != 'CXX-FOREIGN-INDEX') {
                 console.error('<cxx-ref>.in (', this.in,
                               ') must be a <cxx-foreign-index>; was',
                               this.inElem);
             }
+            if (oldInElem) {
+                oldInElem.references.delete(this);
+                this.index = null;
+            }
+            if (newInElem) {
+                newInElem.references.add(this);
+                this.index = newInElem.index;
+            }
         },
         toElemChanged: function() {
             if (this.toElem) {
                 this.async(function() {
                     // Async makes sure the toElem is upgraded.
-                    if (!(this.toElem instanceof CxxSectionElement ||
-                          this.toElem instanceof CxxTableElement ||
-                          this.toElem instanceof CxxFigureElement)) {
+                    if (!this.toElem.numericTitle) {
                         console.error("Reference from", this,
-                                      "refers to non-section, non-table, non-figure element",
-                                      this.toElem);
+                                      "refers to un-numbered element",
+                                      this.toElem,
+                                      "(sections, tables, and figures are numbered)");
                     }
                 });
             }
-        },
-
-        computeTargetNumber: function(sec_num, table_num, figure_num) {
-            return sec_num || table_num || figure_num;
         },
 
         computeForeignSectionNumber: function(foreignIndex, to) {
             return '\u00A7' + foreignIndex[to];
         },
 
-        computeSynopsisLabel: function(targetTitle) {
-            return ', ' + targetTitle;
-        },
-
-        prependHash: function(value) {
-            return '#' + value;
-        },
-
-        indexChanged: function() {
-            if (this.inElem && !(this.to in this.inElem.index)) {
+        indexChanged: function(newIndex) {
+            if (newIndex && !(this.to in newIndex)) {
                 console.error(this.to, 'not found in', this.inElem);
             }
         }

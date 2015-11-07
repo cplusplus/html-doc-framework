@@ -26,12 +26,14 @@ limitations under the License.
 
     </style>
     <figure>
-      <figcaption>Figure {{figure_num}} — <wbr><content select="figcaption"></content></figcaption>
+      <figcaption>Figure <span>{{figure_num}}</span> — <wbr><content select="figcaption"></content></figcaption>
       <content></content>
     </figure>
   </template>
   <script>
     (function() {
+      "use strict";
+
       function renumberFigures() {
         Polymer.dom(document).querySelectorAll('cxx-figure').forEach(function(figure, index) {
           figure.figure_num = index + 1;
@@ -39,6 +41,22 @@ limitations under the License.
       }
       window.CxxFigureElement = Polymer({
         is: 'cxx-figure',
+
+        properties: {
+          figure_num: {
+            type: Number,
+          },
+          numericTitle: {
+            type: String,
+            computed: 'computeNumericTitle(figure_num)',
+          },
+        },
+
+        // Computed properties:
+        computeNumericTitle: function(figure_num) {
+          return 'Figure ' + figure_num;
+        },
+
         attached: renumberFigures,
         detached: renumberFigures,
       });

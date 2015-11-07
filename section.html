@@ -13,6 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
+<link rel="import" href="util/template-helpers.html">
+
 <!--
     Sections auto-number themselves and their paragraphs. The chosen number can
     be overridden by setting the 'number' attribute. A paragraph can also be
@@ -34,7 +36,7 @@ limitations under the License.
   </style>
   <template>
     <section>
-      <header><span class="section-number">{{sec_num}}</span> <content select="h1"></content> <span style="float:right"><a href="{{prependHash(id)}}">{{surroundWithBrackets(id)}}</a></span></header>
+      <header><span class="section-number">{{sec_num}}</span> <content select="h1"></content> <span style="float:right"><a href="{{concat('#', id)}}">{{concat('[', id, ']')}}</a></span></header>
       <content></content>
     </section>
   </template>

@@ -17,7 +17,7 @@ var CxxSectionBehavior, CxxSectionElement;
 (function() {
     'use strict';
 
-    CxxSectionBehavior = {
+    var CxxSectionBehaviorImpl = {
         properties: {
             id: {
                 type: String,
@@ -32,14 +32,16 @@ var CxxSectionBehavior, CxxSectionElement;
                 value: "?",
                 observer: 'sec_numChanged',
             },
+            numericTitle: {
+                // Used in <cxx-ref>'s text.
+                type: String,
+                computed: 'computeNumericTitle(sec_num)',
+            },
         },
 
-        // Template helpers:
-        prependHash: function(value) {
-            return '#' + value;
-        },
-        surroundWithBrackets: function(value) {
-            return '[' + value + ']';
+        // Computed properties:
+        computeNumericTitle: function(sec_num) {
+            return sec_num;
         },
 
         // External interface:
@@ -117,6 +119,11 @@ var CxxSectionBehavior, CxxSectionElement;
             return number + 1
         }
     };
+
+    CxxSectionBehavior = [
+        CxxTemplateHelpersBehavior,
+        CxxSectionBehaviorImpl,
+    ];
 
     CxxSectionElement = Polymer({
         is: 'cxx-section',

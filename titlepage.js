@@ -17,6 +17,10 @@ limitations under the License.
     Polymer({
         is: 'cxx-titlepage',
 
+        behaviors: [
+            CxxTemplateHelpersBehavior,
+        ],
+
         properties: {
             projectNumber: {
                 type: Object,
@@ -41,9 +45,6 @@ limitations under the License.
         },
 
         // Template helpers:
-        concat: function() {
-            return Array.prototype.join.call(arguments, '');
-        },
         stageIs: function(stage) {
             return Array.prototype.slice.call(arguments, 1).some(function(expected) {
                 return stage === expected;

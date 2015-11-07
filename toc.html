@@ -15,11 +15,27 @@ limitations under the License.
 
 <!-- Draws a table of contents based on the <cxx-clause> and <cxx-section> elements. -->
 
+<style>
+  /* This works by skipping the Shadow/Shady DOM emulation, and just
+     styling the composed tree. */
+
+  cxx-toc { display: block; }
+  cxx-toc nav > ol { font-weight: bold; }
+  cxx-toc ol { font-weight: normal; padding-left: 0; margin-left: 0; }
+
+  /* Browsers don't support ::marker or display:marker, so emulate it. */
+  cxx-toc li { list-style-type: none; }
+  cxx-toc .marker { display: inline-block; }
+
+  cxx-toc li .marker { width: 2em; text-align: left; }
+  cxx-toc ol ol { margin-left: 2em; }
+  cxx-toc li li .marker { width: 3em; }
+  cxx-toc ol ol ol { margin-left: 3em; }
+  cxx-toc li li li .marker { width: 3.5em; }
+  cxx-toc ol ol ol ol { margin-left: 3.5em; }
+  cxx-toc li li li li .marker { width: 4.5em; }
+</style>
 <dom-module id="cxx-toc">
-  <style>
-    :host { display: block; }
-    nav > ol { font-weight: bold; }
-  </style>
   <template>
     <nav>
       <h1>Contents</h1>
@@ -28,22 +44,6 @@ limitations under the License.
   </template>
 </dom-module>
 <dom-module id="cxx-internal-toc-level">
-  <style>
-    ol { font-weight: normal; padding-left: 0; }
-
-    /* Browsers don't support ::marker or display:marker, so emulate it. */
-    li { list-style-type: none; }
-    .marker { display: inline-block; }
-
-    :host { padding-left: 0; margin-left: 0; }
-    li .marker { width: 2em; text-align: left; }
-    :host ol { margin-left: 2em; }
-    li /deep/ li .marker { width: 3em; }
-    :host ol::shadow ol { margin-left: 3em; }
-    li /deep/ li /deep/ li .marker { width: 3.5em; }
-    :host ol::shadow ol::shadow ol { margin-left: 3.5em; }
-    li /deep/ li /deep/ li /deep/ li .marker { width: 4.5em; }
-  </style>
   <template>
     <template is="dom-repeat" items="{{sections}}">
       <li

@@ -13,7 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<link rel="import" href="util/get-element-by-id.html"/>
+<link rel="import" href="util/template-helpers.html">
+<link rel="import" href="util/get-element-by-id.html">
 
 <!--
     The 'to' attribute is the id of a <cxx-section> or <cxx-table> element (or subclass).
@@ -29,17 +30,17 @@ limitations under the License.
 
 <dom-module name="cxx-ref">
   <template
-    ><cxx-get-element-by-id elemId="{{in}}" elem="{{inElem}}"></cxx-get-element-by-id
-    ><template is="dom-if" if="{{!in}}"><cxx-get-element-by-id elemId="{{to}}" elem="{{toElem}}"></cxx-get-element-by-id></template
+    ><cxx-get-element-by-id elem-id="{{in}}" elem="{{inElem}}"></cxx-get-element-by-id
+    ><template is="dom-if" if="{{!in}}"><cxx-get-element-by-id elem-id$="{{to}}" elem="{{toElem}}"></cxx-get-element-by-id></template
 
     ><template is="dom-if" if="{{insynopsis}}">// <i
-      ><template is="dom-if" if="{{inElem.index}}"><span>{{inElem.name}}</span> <span title="{{to}}">{{foreignSectionNumber}}</span></template
-      ><template is="dom-if" if="{{!in}}"><a title="{{to}}" href="{{prependHash(to)}}">{{targetNumber}}</a></template
-      >{{synopsisLabel}}</i></template
+      ><template is="dom-if" if="{{index}}"><span>{{inElem.name}}</span> <span title="{{to}}">{{foreignSectionNumber}}</span></template
+      ><template is="dom-if" if="{{!in}}"><a title="{{to}}" href="{{concat('#', to)}}">{{toElem.numericTitle}}</a></template
+     ><span>{{concat(', ', toElem.title_element.textContent)}}</span></i></template
 
     ><template is="dom-if" if="{{!insynopsis}}"
-      ><template is="dom-if" if="{{inElem.index}}"><span>{{inElem.name}}</span> <span title="{{to}}">{{foreignSectionNumber}}</span></template
-      ><template is="dom-if" if="{{!in}}"><a title="{{to}}" href="{{prependHash(to)}}">{{targetNumber}}</a></template
+      ><template is="dom-if" if="{{index}}"><span>{{inElem.name}}</span> <span title="{{to}}">{{foreignSectionNumber}}</span></template
+      ><template is="dom-if" if="{{!in}}"><a title="{{to}}" href="{{concat('#', to)}}">{{toElem.numericTitle}}</a></template
     ></template
   ></template>
   <script src="ref.js"></script>

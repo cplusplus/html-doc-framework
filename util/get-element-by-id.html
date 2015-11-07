@@ -22,7 +22,7 @@ Then the containing element can define a method `variableToFillInChanged` that
 will be called when an element with the right ID is added to the document.
 -->
 <dom-module id="cxx-get-element-by-id">
-  <template><style>:host {display: none}</style></template>
+  <style>:host {display: none}</style>
   <script>
     (function() {
       'use strict';
@@ -38,7 +38,7 @@ will be called when an element with the right ID is added to the document.
         // addedNodes' IDs misses a bunch of IDs. Instead, we'll just search
         // for all the IDs we care about, any time anything changes.
         Object.keys(pendingIds).forEach(function(id) {
-          var elem = Polymer.dom(document).getElementById(id);
+          var elem = document.getElementById(id);
           if (elem) {
             pendingIds[id].forEach(function(waiting) {
               if (waiting.elemId == id)
@@ -87,7 +87,7 @@ will be called when an element with the right ID is added to the document.
             this._setElem(null);
             return;
           }
-          this._setElem(Polymer.dom(document).getElementById(this.elemId));
+          this._setElem(document.getElementById(this.elemId));
           if (!this.elem) {
             watchFor(this.elemId, this);
           }

@@ -23,12 +23,22 @@ Polymer({
         name: {
             type: String,
         },
+        index: {
+            type: Object,
+            notify: true,
+            readOnly: true,
+        },
+        references: {
+            type: Object,
+            value: function() { return new Set(); },
+            readOnly: true,
+        }
     },
 
     attachIndex: function(e) {
-        this.index = e.detail.response;
+        this._setIndex(e.detail.response);
         if (typeof(this.index) != 'object') {
-            this.index = JSON.parse(this.index);
+            this._setIndex(JSON.parse(this.index));
         }
 
         for (var property in this.index) {
@@ -39,5 +49,10 @@ Polymer({
                               property, 'mapped to', this.index[property]);
             }
         }
+
+        var self = this;
+        this.references.forEach(function(reference) {
+            reference.index = self.index;
+        });
     }
 });

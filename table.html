@@ -70,9 +70,20 @@ limitations under the License.
           },
           table_num: {
             type: Number,
+            value: 0,
+          },
+          numericTitle: {
+            type: String,
+            computed: 'computeNumericTitle(table_num)',
           },
         },
 
+        // Computed properties:
+        computeNumericTitle: function(table_num) {
+          return 'Table ' + table_num;
+        },
+
+        // Lifecycle:
         arrangeColumns: function() {
           // Balance list-tables so we don't have to do it manually.  I tried
           // using CSS columns, but the appearance isn't as nice.
