@@ -1,0 +1,21 @@
+{
+  "name": "cxx-html-doc-framework",
+  "version": "0.3.2",
+  "description": "A set of custom HTML elements to make writing well-formatted C++ papers and ISO documents easier.",
+  "main": "framework.html",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/wct --plugin sauce"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com.:cplusplus/html-doc-framework.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "web-component-tester": "^3.3.30"
+  }
+}

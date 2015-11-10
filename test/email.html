@@ -1,0 +1,23 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+<script src="../../web-component-tester/browser.js"></script>
+<link rel="import" href="../email.html">
+<link rel="import" href="../publish.html">
+</head>
+<body>
+  <cxx-email id="a">foo@example.com</cxx-email>
+  <cxx-publish-button id="publish"></cxx-publish-button>
+  <script>
+    suite('<cxx-email>', function() {
+      test('produces link', function() {
+        return document.getElementById('publish').cloneStaticAndInline(document)
+        .then(copy => {
+          var email = copy.querySelector('#a');
+          expect(email.outerHTML).equals('<cxx-email id="a"><a class="style-scope cxx-email" href="mailto:foo@example.com">foo@example.com</a></cxx-email>');
+        })
+      });
+    });
+  </script>
+</body>
+</html>

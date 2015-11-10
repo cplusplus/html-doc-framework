@@ -12,7 +12,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
+<link rel="import" href="../polymer/polymer.html">
 
-<polymer-element name="cxx-email" noscript>
-  <template><a href="mailto:{{textContent}}"><content></content></a></template>
-</polymer-element>
+<dom-module id="cxx-email">
+  <template><a href="mailto:[[_computeTextContent()]]"><content></content></a></template>
+  <script>
+    Polymer({
+      is: 'cxx-email',
+      _computeTextContent: function() {
+        return Polymer.dom(this).textContent;
+      }
+    });
+  </script>
+</dom-module>

@@ -76,7 +76,7 @@ limitations under the License.
     // Replaces <caption>s inside <caption>s with <spans>, so that Firefox doesn't
     // omit them from the rendering.
     function fixNestedCaptions(doc) {
-        doc.querySelectorAll('caption caption').forEach(function(caption) {
+        forEach(doc.querySelectorAll('caption caption'), function(caption) {
             var span = doc.createElement('span');
             span.innerHTML = caption.innerHTML;
             caption.parentNode.insertBefore(span, caption);
@@ -89,17 +89,18 @@ limitations under the License.
         // because the copy doesn't have time to load the images.
         inlineImages(doc.getElementsByTagName('img'));
 
-        var copy = doc.cloneNode(true);
+        var newDoc = document.implementation.createHTMLDocument();
+        var copy = newDoc.importNode(doc.documentElement, true);
 
         // Remove elements that run code or don't contribute to the appearance
         // of the page.
-        forEach(['cxx-publish-button', 'script', 'link[rel=import]'],
+        forEach(['cxx-publish-button', 'script', 'link[rel=import]', 'template'],
                 function(selector) {
             forEach(copy.querySelectorAll(selector), function(node) {
                 node.remove();
             });
         });
-        forEach(copy.body.querySelectorAll('*'), function(node) {
+        forEach(copy.querySelectorAll('body *'), function(node) {
             if (getComputedStyle(node).display === 'none') {
                 node.remove();
             }
@@ -124,15 +125,16 @@ limitations under the License.
                     }
                     return styleText;
                 }).then(function(styleText) {
-                    var inlinedStyle = copy.createElement('style');
+                    var inlinedStyle = newDoc.createElement('style');
                     inlinedStyle.textContent = styleText;
                     extSheet.parentNode.insertBefore(inlinedStyle, extSheet);
                     extSheet.parentNode.removeChild(extSheet);
                 });
             });
 
-        copy.head.insertBefore(declareCustomTagNamesForIE8(),
-                               copy.head.firstElementChild);
+        var head = copy.querySelector('head');
+        head.insertBefore(declareCustomTagNamesForIE8(),
+                          head.firstElementChild);
 
         return Promise.all(sheetUpdates).then(function() {
             return copy;
@@ -141,7 +143,7 @@ limitations under the License.
 
     function buildSectionIndex(doc) {
         var result = {};
-        doc.querySelectorAll('cxx-clause,cxx-section').array().forEach(function(section) {
+        forEach(doc.querySelectorAll('cxx-clause,cxx-section'), function(section) {
             if (!section.id) {
                 console.warn(section, 'is missing its id.');
                 return;
@@ -170,6 +172,8 @@ limitations under the License.
             },
         },
 
+        cloneStaticAndInline: cloneStaticAndInline,
+
         publish: function() {
             if (this.publishing) {
                 return;
@@ -188,6 +192,7 @@ limitations under the License.
                                          {type: 'text/html'});
                 this.flattenedBlob = URL.createObjectURL(published);
                 this.sectionIndex = encodeURI('data:application/json,' + JSON.stringify(sectionIndex));
+                return this;
             }.bind(this)).catch(function(e) {
                 console.error(e);
                 this.publishing = false;

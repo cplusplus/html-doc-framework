@@ -14,5 +14,8 @@
     "iron-ajax": "PolymerElements/iron-ajax#^1.0.0",
     "promise-polyfill": "PolymerLabs/promise-polyfill#^1.0.0",
     "fetch": "github/fetch#^0.10.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "~3.3.30"
   }
 }
