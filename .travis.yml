@@ -8,3 +8,6 @@ addons:
     access_key:
       secure: "jP3TUFS4NqnoclZuEzgVSzV6UYpi1pZfaORLygI6rFXO1Y8kg4i00JnkjwgDDMNuAT1MFC0MQwWPdO6WkhgG3bZEsaNUi55RF8InZXaqb8hT1qemrWduI7SSk0H2JHxIRisVDLh4wZT/hRN5kvZw/M60YI/dOL72XuT4IiF5RGk="
 sudo: false
+cache:
+  directories:
+    - node_modules
