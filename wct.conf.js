@@ -3,6 +3,7 @@ module.exports = {
     plugins: {
         sauce: {
             disabled: true,
+            tunnelId: process.env.TRAVIS_JOB_NUMBER,
             browsers: [
                 {
                     "browserName": "chrome",

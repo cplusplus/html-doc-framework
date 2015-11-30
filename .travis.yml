@@ -1,8 +1,10 @@
 language: node_js
 node_js:
   - "stable"
-env:
-  global:
-    - secure: aY4V9FcP+9993spYv2yqmalJDQ5g76XpI3vOcmbzza7ycHRXPTQy0Uevp8bh/yBXP4wAkak7axh+fW1sEJXs5Ui2WOPlMdO1XpfbsMcOXW3sp0tZIUWM53OZXltyHIvSndAkpQN3RRq1EsI7FI68i+ckwdUCzLhqfIvF7RJSo4Y=
-    - secure: YJsQxD3G/lRmcAsAnWF1HYP2yYhmWZtWbiui1JR8XyMiyIpVYcwFsJUsf6mRZ/zR84XKiwtb7FClVkTrH4SIfkMhzGzXVv1yICopUEOJiV6cFr4twXtXFVTv0JGqBFLO2/fUeNqk6XWLRVkJUtKomG1ms5XD4aDh5JXwx/y0dKU=
+addons:
+  sauce_connect:
+    username:
+      secure: "UGu1tUabPHdqCE+4dfFXWejkaEhmXvyUvmk4CBhoYJ62HvgNrVCaE0CZNRmKRqZTtNj1FKQiybiEh6LTe3/+06QdYywd2lmHaycCirBO+2nfA62WlgY/seHwJ5l9AOjjxdIauoZuPY4NySjdAEcxID495yo9DxyNvKTnJhnoXg4="
+    access_key:
+      secure: "jP3TUFS4NqnoclZuEzgVSzV6UYpi1pZfaORLygI6rFXO1Y8kg4i00JnkjwgDDMNuAT1MFC0MQwWPdO6WkhgG3bZEsaNUi55RF8InZXaqb8hT1qemrWduI7SSk0H2JHxIRisVDLh4wZT/hRN5kvZw/M60YI/dOL72XuT4IiF5RGk="
 sudo: false
