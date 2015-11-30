@@ -23,5 +23,5 @@ gulp.task('test:local', ['chai-html'], done => {
   wct.test({plugins: {local: {},   sauce: false}}, done);
 })
 gulp.task('test:sauce', ['chai-html'], done => {
-  wct.test({plugins: {local: false, sauce: {}}}, done);
+  wct.test({plugins: {local: false, sauce: {disabled:false}}}, done);
 })
