@@ -16,6 +16,6 @@
     "fetch": "github/fetch#^0.10.0"
   },
   "devDependencies": {
-    "web-component-tester": "~3.3.30"
+    "web-component-tester": "^3.4.0"
   }
 }

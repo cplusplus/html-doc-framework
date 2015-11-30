@@ -39,7 +39,7 @@ limitations under the License.
             if (customTagNameSet.hasOwnProperty(name))
                 scriptComment += 'document.createElement("' + name + '");';
         }
-        scriptComment += '</script><![endif]'
+        scriptComment += '</script><![endif]';
         return document.createComment(scriptComment);
     }
 
@@ -61,16 +61,15 @@ limitations under the License.
     }
 
     function inlineImages(images) {
-        Array.prototype.forEach.call(images,
-            function(image) {
-                if (image.naturalWidth == 0)
-                    console.error(image, "hasn't loaded yet.");
-                var canvas = document.createElement('canvas');
-                canvas.width = image.naturalWidth;
-                canvas.height = image.naturalHeight;
-                canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
-                image.src = canvas.toDataURL();
-            });
+        Array.prototype.forEach.call(images, function(image) {
+            if (image.naturalWidth == 0)
+                console.error(image, "hasn't loaded yet.");
+            var canvas = document.createElement('canvas');
+            canvas.width = image.naturalWidth;
+            canvas.height = image.naturalHeight;
+            canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
+            image.src = canvas.toDataURL();
+        });
     }
 
     // Replaces <caption>s inside <caption>s with <spans>, so that Firefox doesn't
@@ -84,60 +83,72 @@ limitations under the License.
         });
     }
 
+    function newIframeDoc() {
+        return new Promise(function(resolve) {
+            var iframe = document.createElement('iframe');
+            iframe.src = "about:blank";
+            iframe.onload = function() {
+                resolve(iframe.contentDocument);
+            };
+            document.body.appendChild(iframe);
+        });
+    }
+
     function cloneStaticAndInline(doc) {
         // Inline the images on the source document instead of the copy
         // because the copy doesn't have time to load the images.
         inlineImages(doc.getElementsByTagName('img'));
 
-        var newDoc = document.implementation.createHTMLDocument();
-        var copy = newDoc.importNode(doc.documentElement, true);
+        return newIframeDoc().then(function(newDoc) {
+            var copy = newDoc.importNode(doc.documentElement, true);
 
-        // Remove elements that run code or don't contribute to the appearance
-        // of the page.
-        forEach(['cxx-publish-button', 'script', 'link[rel=import]', 'template'],
-                function(selector) {
-            forEach(copy.querySelectorAll(selector), function(node) {
-                node.remove();
-            });
-        });
-        forEach(copy.querySelectorAll('body *'), function(node) {
-            if (getComputedStyle(node).display === 'none') {
-                node.remove();
-            }
-        })
-
-        fixNestedCaptions(copy);
-
-        // Inline all style sheets.
-        var sheetUpdates = Array.prototype.map.call(
-            copy.querySelectorAll('link[rel="stylesheet"]'),
-            function(extSheet) {
-                return fetch(extSheet.href).catch(function(error) {
-                    console.warning('Could not fetch', extSheet.href,
-                                    'falling back to stylesheet contents.',
-                                    error);
-                    var styleText = '';
-                    var sheet = extSheet.sheet;
-                    if (!sheet.disabled) {
-                        forEach(sheet.cssRules, function(rule) {
-                            styleText += rule.cssText;
-                        });
-                    }
-                    return styleText;
-                }).then(function(styleText) {
-                    var inlinedStyle = newDoc.createElement('style');
-                    inlinedStyle.textContent = styleText;
-                    extSheet.parentNode.insertBefore(inlinedStyle, extSheet);
-                    extSheet.parentNode.removeChild(extSheet);
+            // Remove elements that run code or don't contribute to the appearance
+            // of the page.
+            forEach([
+                'cxx-publish-button', 'script', 'link[rel=import]', 'template'
+            ], function(selector) {
+                forEach(copy.querySelectorAll(selector), function(node) {
+                    node.remove();
                 });
             });
+            forEach(copy.querySelectorAll('body *'), function(node) {
+                if (getComputedStyle(node).display === 'none') {
+                    node.remove();
+                }
+            })
 
-        var head = copy.querySelector('head');
-        head.insertBefore(declareCustomTagNamesForIE8(),
-                          head.firstElementChild);
+            fixNestedCaptions(copy);
 
-        return Promise.all(sheetUpdates).then(function() {
-            return copy;
+            // Inline all style sheets.
+            var sheetUpdates = Array.prototype.map.call(
+                copy.querySelectorAll('link[rel="stylesheet"]'),
+                function(extSheet) {
+                    return fetch(extSheet.href).catch(function(error) {
+                        console.warning('Could not fetch', extSheet.href,
+                                        'falling back to stylesheet contents.',
+                                        error);
+                        var styleText = '';
+                        var sheet = extSheet.sheet;
+                        if (!sheet.disabled) {
+                            forEach(sheet.cssRules, function(rule) {
+                                styleText += rule.cssText;
+                            });
+                        }
+                        return styleText;
+                    }).then(function(styleText) {
+                        var inlinedStyle = newDoc.createElement('style');
+                        inlinedStyle.textContent = styleText;
+                        extSheet.parentNode.insertBefore(inlinedStyle, extSheet);
+                        extSheet.parentNode.removeChild(extSheet);
+                    });
+            });
+
+            var head = copy.querySelector('head');
+            head.insertBefore(declareCustomTagNamesForIE8(), head.firstElementChild);
+
+            return Promise.all(sheetUpdates).then(function() {
+                return copy;
+            });
         });
     }
 
