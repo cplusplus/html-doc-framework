@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "node_modules/.bin/gulp test:sauce"
+    "postinstall": "bower install",
+    "test": "gulp test:sauce"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   "devDependencies": {
     "babel-preset-es2015": "^6.1.18",
     "babelify": "^7.2.0",
+    "bower": "*",
     "browserify": "^12.0.1",
     "chai-html": "0.0.3",
     "gulp": "^3.9.0",
