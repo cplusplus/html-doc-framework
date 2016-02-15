@@ -6,8 +6,6 @@ module.exports = {
         },
         sauce: {
             disabled: true,
-            // Remove this once https://github.com/Polymer/wct-sauce/pull/15 is fixed.
-            tunnelId: process.env.TRAVIS_JOB_NUMBER,
             browsers: [
                 {
                     "browserName": "chrome",
