@@ -18,5 +18,8 @@
   "devDependencies": {
     "web-component-tester": "^4.2.0",
     "chai-dom": "~1.4.0"
+  },
+  "resolutions": {
+    "chai": "^3.0.0"
   }
 }
