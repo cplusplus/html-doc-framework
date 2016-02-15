@@ -1,8 +1,12 @@
 module.exports = {
     testTimeout: 240 * 1000,
     plugins: {
+        local: {
+            browsers: ['chrome', 'firefox'],
+        },
         sauce: {
             disabled: true,
+            // Remove this once https://github.com/Polymer/wct-sauce/pull/15 is fixed.
             tunnelId: process.env.TRAVIS_JOB_NUMBER,
             browsers: [
                 {

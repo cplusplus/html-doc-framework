@@ -13,9 +13,10 @@
     "polymer": "Polymer/polymer#^1.2",
     "iron-ajax": "PolymerElements/iron-ajax#^1.0.0",
     "promise-polyfill": "PolymerLabs/promise-polyfill#^1.0.0",
-    "fetch": "github/fetch#^0.10.0"
+    "fetch": "github/fetch#^0.11.0"
   },
   "devDependencies": {
-    "web-component-tester": "^3.4.0"
+    "web-component-tester": "^4.2.0",
+    "chai-dom": "~1.4.0"
   }
 }

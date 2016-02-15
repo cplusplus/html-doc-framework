@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
 <script src="../../web-component-tester/browser.js"></script>
-<script src="../test-util/chai-html.js"></script>
+<script src="../../chai-dom/chai-dom.js"></script>
 <link rel="import" href="../email.html">
 <link rel="import" href="../publish.html">
 </head>
@@ -14,8 +14,14 @@
       test('produces link', function() {
         return document.getElementById('publish').cloneStaticAndInline(document)
         .then(copy => {
-          var email = copy.querySelector('#a');
-          expect(email.outerHTML).html.deep.equals('<cxx-email id="a"><a class="style-scope cxx-email" href="mailto:foo@example.com">foo@example.com</a></cxx-email>');
+          var email = copy.querySelector('cxx-email#a');
+          expect(email).to.exist;
+          var a = email.firstChild;
+          expect(a.localName).to.equal('a');
+          expect(a.nextSibling).to.not.exist;
+          expect(a).to.have.text('foo@example.com');
+          expect(a.href).to.equal('mailto:foo@example.com');
+          expect(a).to.have.class('cxx-email');
         })
       });
     });
